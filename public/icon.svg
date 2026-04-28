@@ -1,0 +1,27 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+  <rect width='512' height='512' rx='80' fill='#3d1f0a'/>
+  <!-- 棚板 -->
+  <rect x='48' y='340' width='416' height='24' rx='4' fill='#a0622a'/>
+  <rect x='48' y='200' width='416' height='24' rx='4' fill='#a0622a'/>
+  <!-- 本 1 -->
+  <rect x='80' y='224' width='44' height='116' rx='3' fill='#8b1a1a'/>
+  <!-- 本 2 -->
+  <rect x='132' y='240' width='36' height='100' rx='3' fill='#1a4a8b'/>
+  <!-- 本 3 -->
+  <rect x='176' y='230' width='52' height='110' rx='3' fill='#1a6b2a'/>
+  <!-- 本 4 -->
+  <rect x='236' y='244' width='40' height='96' rx='3' fill='#6b1a6b'/>
+  <!-- 本 5 -->
+  <rect x='284' y='228' width='48' height='112' rx='3' fill='#c9a84c'/>
+  <!-- 本 6 -->
+  <rect x='340' y='238' width='36' height='102' rx='3' fill='#8b1a1a'/>
+  <!-- 本 7（下段） -->
+  <rect x='80' y='80' width='52' height='120' rx='3' fill='#6b4a1a'/>
+  <rect x='140' y='90' width='40' height='110' rx='3' fill='#1a5a6b'/>
+  <rect x='188' y='80' width='48' height='120' rx='3' fill='#8b1a1a'/>
+  <rect x='244' y='95' width='36' height='105' rx='3' fill='#1a4a8b'/>
+  <rect x='288' y='80' width='44' height='120' rx='3' fill='#c9a84c'/>
+  <!-- 縦棒 -->
+  <rect x='48' y='60' width='16' height='304' rx='4' fill='#6b3a1f'/>
+  <rect x='448' y='60' width='16' height='304' rx='4' fill='#6b3a1f'/>
+</svg>

@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --wood-dark: #3d1f0a;
+    --wood-mid: #6b3a1f;
+    --wood-light: #a0622a;
+    --wood-highlight: #c8843d;
+    --shelf-shadow: rgba(0, 0, 0, 0.5);
+    --paper: #f5ead8;
+    --paper-dark: #e8d4b0;
+    --ink: #2c1a0e;
+    --ink-light: #5c3d20;
+    --accent: #8b1a1a;
+    --accent-light: #c0392b;
+    --gold: #c9a84c;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background-color: var(--wood-dark);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .wood-bg {
+    background-color: var(--wood-dark);
+    background-image:
+      repeating-linear-gradient(
+        92deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.015) 2px,
+        rgba(255,255,255,0.015) 4px
+      ),
+      repeating-linear-gradient(
+        180deg,
+        transparent,
+        transparent 8px,
+        rgba(0,0,0,0.08) 8px,
+        rgba(0,0,0,0.08) 9px
+      );
+  }
+
+  .shelf {
+    background: linear-gradient(
+      180deg,
+      var(--wood-highlight) 0%,
+      var(--wood-light) 20%,
+      var(--wood-mid) 60%,
+      var(--wood-dark) 100%
+    );
+    box-shadow:
+      0 6px 12px var(--shelf-shadow),
+      0 2px 4px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .shelf::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.2) 20%,
+      rgba(255,255,255,0.1) 50%,
+      rgba(255,255,255,0.2) 80%,
+      transparent
+    );
+  }
+
+  .book-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    transform-origin: bottom center;
+    position: relative;
+  }
+
+  .book-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    filter: brightness(1.1);
+    z-index: 10;
+  }
+
+  .book-card:active {
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  .book-cover {
+    border-radius: 2px 4px 4px 2px;
+    box-shadow:
+      2px 2px 6px rgba(0,0,0,0.5),
+      inset -2px 0 6px rgba(0,0,0,0.2),
+      inset 1px 0 2px rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .book-cover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(0,0,0,0.3),
+      rgba(0,0,0,0.1) 50%,
+      transparent
+    );
+  }
+
+  .parchment {
+    background-color: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,0,0,0.05) 0%, transparent 60%);
+    border: 1px solid var(--paper-dark);
+  }
+
+  .gold-border {
+    border: 2px solid var(--gold);
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,0.3),
+      inset 0 0 0 1px rgba(201,168,76,0.2);
+  }
+
+  .shelf-label {
+    font-family: 'Georgia', serif;
+    color: var(--paper);
+    text-shadow:
+      0 1px 2px rgba(0,0,0,0.8),
+      0 0 8px rgba(201,168,76,0.3);
+    letter-spacing: 0.1em;
+  }
+
+  .nav-tab {
+    background: linear-gradient(180deg, var(--wood-mid) 0%, var(--wood-dark) 100%);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--paper-dark);
+    transition: all 0.2s ease;
+    font-family: 'Georgia', serif;
+  }
+
+  .nav-tab.active {
+    background: linear-gradient(180deg, var(--wood-highlight) 0%, var(--wood-light) 100%);
+    color: var(--paper);
+    border-color: var(--gold);
+    box-shadow: 0 0 8px rgba(201,168,76,0.4);
+  }
+
+  .nav-tab:hover:not(.active) {
+    background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 100%);
+    color: var(--paper);
+  }
+
+  .btn-primary {
+    background: linear-gradient(180deg, var(--accent-light) 0%, var(--accent) 100%);
+    color: var(--paper);
+    border: 1px solid rgba(0,0,0,0.3);
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.2);
+    font-family: 'Georgia', serif;
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(180deg, #e04040 0%, var(--accent-light) 100%);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .btn-wood {
+    background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 100%);
+    color: var(--paper);
+    border: 1px solid rgba(0,0,0,0.3);
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+    font-family: 'Georgia', serif;
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+
+  .btn-wood:hover {
+    background: linear-gradient(180deg, var(--wood-highlight) 0%, var(--wood-light) 100%);
+    transform: translateY(-1px);
+  }
+}
