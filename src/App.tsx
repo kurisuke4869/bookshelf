@@ -16,10 +16,10 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: 'addedAt', label: '追加順' },
 ];
 
-const VIEW_META: Record<BookStatus, { label: string; icon: string }> = {
-  read:      { label: '読了',    icon: '✅' },
-  tsundoku:  { label: '積ん読',  icon: '📦' },
-  wishlist:  { label: 'ほしい本', icon: '⭐' },
+const VIEW_META: Record<BookStatus, { label: string }> = {
+  read:      { label: '読了' },
+  tsundoku:  { label: '積ん読' },
+  wishlist:  { label: 'ほしい本' },
 };
 
 function sortBooks(books: Book[], key: SortKey): Book[] {
@@ -96,7 +96,7 @@ export default function App() {
             )}
             {isDetailView && (
               <h1 className="shelf-label text-base font-normal m-0">
-                {VIEW_META[view as BookStatus].icon} {VIEW_META[view as BookStatus].label}
+                {VIEW_META[view as BookStatus].label}
               </h1>
             )}
           </div>
@@ -140,8 +140,7 @@ export default function App() {
               </div>
             )}
             <ShelfSection
-              label="読了" icon="✅"
-              books={readBooks}
+              label="読了"              books={readBooks}
               onBookClick={setDetailBook}
               onAddClick={() => setAddModalStatus('read')}
               onMoreClick={() => setView('read')}
@@ -149,8 +148,7 @@ export default function App() {
               preview
             />
             <ShelfSection
-              label="積ん読" icon="📦"
-              books={tsundokuBooks}
+              label="積ん読"              books={tsundokuBooks}
               onBookClick={setDetailBook}
               onAddClick={() => setAddModalStatus('tsundoku')}
               onMoreClick={() => setView('tsundoku')}
@@ -158,8 +156,7 @@ export default function App() {
               preview
             />
             <ShelfSection
-              label="ほしい本" icon="⭐"
-              books={wishlistBooks}
+              label="ほしい本"              books={wishlistBooks}
               onBookClick={setDetailBook}
               onAddClick={() => setAddModalStatus('wishlist')}
               onMoreClick={() => setView('wishlist')}
@@ -184,8 +181,7 @@ export default function App() {
               ))}
             </div>
             <ShelfSection
-              label="読了" icon="✅"
-              books={readBooks}
+              label="読了"              books={readBooks}
               onBookClick={setDetailBook}
               onAddClick={() => setAddModalStatus('read')}
               emptyMessage="読んだ本を追加しましょう"
@@ -194,8 +190,7 @@ export default function App() {
         )}
         {view === 'tsundoku' && (
           <ShelfSection
-            label="積ん読" icon="📦"
-            books={tsundokuBooks}
+            label="積ん読"            books={tsundokuBooks}
             onBookClick={setDetailBook}
             onAddClick={() => setAddModalStatus('tsundoku')}
             emptyMessage="積ん読の本を追加しましょう"
@@ -203,8 +198,7 @@ export default function App() {
         )}
         {view === 'wishlist' && (
           <ShelfSection
-            label="ほしい本" icon="⭐"
-            books={wishlistBooks}
+            label="ほしい本"            books={wishlistBooks}
             onBookClick={setDetailBook}
             onAddClick={() => setAddModalStatus('wishlist')}
             emptyMessage="気になる本を追加しましょう"

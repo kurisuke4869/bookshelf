@@ -3,7 +3,6 @@ import { BookCard } from './BookCard';
 
 interface Props {
   label: string;
-  icon: string;
   books: Book[];
   onBookClick: (book: Book) => void;
   onAddClick: () => void;
@@ -14,7 +13,7 @@ interface Props {
 
 const PREVIEW_COUNT = 6;
 
-export function ShelfSection({ label, icon, books, onBookClick, onAddClick, onMoreClick, emptyMessage, preview = false }: Props) {
+export function ShelfSection({ label, books, onBookClick, onAddClick, onMoreClick, emptyMessage, preview = false }: Props) {
   const displayBooks = preview ? books.slice(0, PREVIEW_COUNT) : books;
   const hasMore = preview && books.length > PREVIEW_COUNT;
 
@@ -23,7 +22,6 @@ export function ShelfSection({ label, icon, books, onBookClick, onAddClick, onMo
       {/* 棚ラベル */}
       <div className="flex items-center justify-between px-4 mb-2">
         <div className="flex items-center gap-2">
-          <span style={{ fontSize: '1.1rem' }}>{icon}</span>
           <h2 className="shelf-label text-sm sm:text-base font-normal tracking-widest uppercase">
             {label}
           </h2>
