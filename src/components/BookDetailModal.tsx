@@ -109,12 +109,6 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
                 </div>
               )}
             </div>
-            {/* ジャンルタグ */}
-            {book.categories?.slice(0, 2).map(cat => (
-              <span key={cat} style={{ background: 'var(--tag-genre-bg)', color: 'var(--tag-genre-text)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px' }}>
-                {cat}
-              </span>
-            ))}
           </div>
         </div>
 
