@@ -10,6 +10,7 @@ interface GoogleBook {
     publisher?: string;
     description?: string;
     pageCount?: number;
+    categories?: string[];
     imageLinks?: { thumbnail?: string; smallThumbnail?: string };
     industryIdentifiers?: { type: string; identifier: string }[];
   };
@@ -36,6 +37,7 @@ function toBook(g: GoogleBook, status: BookStatus): Book {
     publishedDate: v.publishedDate,
     description: v.description,
     pageCount: v.pageCount,
+    categories: v.categories,
     coverUrl: cover,
     isbn,
     status,
@@ -74,10 +76,6 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
     }
   };
 
-  const handleSelect = (g: GoogleBook) => {
-    setSelected(g);
-  };
-
   const handleAdd = () => {
     if (manualMode) {
       if (!manualTitle.trim()) return;
@@ -105,83 +103,79 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 60, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="w-full sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl flex flex-col"
         style={{
-          background: 'linear-gradient(180deg, var(--paper) 0%, var(--paper-dark) 100%)',
-          border: '2px solid var(--wood-mid)',
-          boxShadow: '0 -4px 32px rgba(0,0,0,0.6)',
+          width: '100%',
+          maxWidth: '640px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          borderRadius: '16px 16px 0 0',
+          display: 'flex',
+          flexDirection: 'column',
+          background: 'var(--card-bg)',
+          border: '1px solid var(--card-border)',
+          boxShadow: '0 -4px 32px rgba(0,0,0,0.3)',
         }}
       >
         {/* ヘッダー */}
-        <div
-          className="flex items-center justify-between px-4 py-3"
-          style={{ borderBottom: '1px solid rgba(201,168,76,0.3)' }}
-        >
-          <h2 className="shelf-label text-base font-normal">本を追加</h2>
-          <button
-            onClick={onClose}
-            className="shelf-label text-lg opacity-60 hover:opacity-100"
-          >
-            ✕
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '0.5px solid var(--card-border)' }}>
+          <h2 style={{ margin: 0, fontSize: '16px', color: 'var(--ink)', fontFamily: "'Kaisei Tokumin', Georgia, serif", fontWeight: 500 }}>本を追加</h2>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: 'var(--ink-light)', lineHeight: 1 }}>✕</button>
         </div>
 
-        <div className="p-4 flex flex-col gap-4">
+        <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {/* ステータス選択 */}
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px' }}>
             {STATUS_OPTIONS.map(opt => (
               <button
                 key={opt.key}
-                className={`nav-tab flex items-center gap-1 text-xs px-3 py-1.5 rounded flex-1 justify-center ${status === opt.key ? 'active' : ''}`}
+                className={`nav-tab ${status === opt.key ? 'active' : ''}`}
+                style={{ flex: 1, padding: '6px 4px', fontSize: '13px', borderRadius: '12px', textAlign: 'center' }}
                 onClick={() => setStatus(opt.key)}
               >
-                <span>{opt.label}</span>
+                {opt.label}
               </button>
             ))}
           </div>
 
           {/* 検索 / 手動切り替え */}
-          <div className="flex gap-2 text-xs" style={{ color: 'var(--paper-dark)' }}>
-            <button
-              className={`pb-1 ${!manualMode ? 'border-b border-current opacity-100' : 'opacity-40'}`}
-              onClick={() => setManualMode(false)}
-            >
-              タイトルで検索
-            </button>
-            <button
-              className={`pb-1 ${manualMode ? 'border-b border-current opacity-100' : 'opacity-40'}`}
-              onClick={() => setManualMode(true)}
-            >
-              手動で入力
-            </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            {[{ label: 'タイトルで検索', manual: false }, { label: '手動で入力', manual: true }].map(opt => (
+              <button
+                key={opt.label}
+                onClick={() => setManualMode(opt.manual)}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer', padding: '0 0 4px',
+                  fontSize: '13px', color: 'var(--ink-mid)',
+                  borderBottom: manualMode === opt.manual ? '1.5px solid var(--accent)' : '1.5px solid transparent',
+                  fontFamily: "'Kaisei Tokumin', Georgia, serif",
+                  opacity: manualMode === opt.manual ? 1 : 0.5,
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
 
           {!manualMode ? (
             <>
               {/* 検索バー */}
-              <div className="flex gap-2">
+              <div style={{ display: 'flex', gap: '8px' }}>
                 <input
                   type="text"
                   placeholder="タイトル・著者名で検索..."
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                  className="flex-1 px-3 py-2 rounded text-sm"
-                  style={{
-                    background: 'rgba(245,234,216,0.1)',
-                    border: '1px solid rgba(201,168,76,0.4)',
-                    color: 'var(--paper)',
-                    fontFamily: 'Georgia, serif',
-                    outline: 'none',
-                  }}
+                  className="modal-input"
+                  style={{ flex: 1 }}
                 />
                 <button
-                  className="btn-primary px-4 py-2 rounded text-sm"
+                  className="btn-primary"
+                  style={{ padding: '8px 16px', fontSize: '14px', borderRadius: '8px' }}
                   onClick={handleSearch}
                   disabled={loading}
                 >
@@ -191,37 +185,33 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
 
               {/* 検索結果 */}
               {results.length > 0 && !selected && (
-                <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '280px', overflowY: 'auto' }}>
                   {results.map(g => (
                     <button
                       key={g.id}
-                      className="flex gap-3 p-2 rounded text-left transition-all"
                       style={{
-                        background: 'rgba(245,234,216,0.06)',
-                        border: '1px solid rgba(201,168,76,0.2)',
+                        display: 'flex', gap: '12px', padding: '10px', borderRadius: '8px', textAlign: 'left',
+                        background: 'var(--bg)', border: '1px solid var(--card-border)', cursor: 'pointer', width: '100%',
                       }}
-                      onClick={() => handleSelect(g)}
+                      onClick={() => setSelected(g)}
                     >
                       {g.volumeInfo.imageLinks?.smallThumbnail ? (
                         <img
                           src={g.volumeInfo.imageLinks.smallThumbnail.replace('http://', 'https://')}
-                          className="w-10 h-14 object-cover rounded flex-shrink-0"
+                          style={{ width: '40px', height: '56px', objectFit: 'cover', borderRadius: '3px', flexShrink: 0 }}
                           alt=""
                         />
                       ) : (
-                        <div
-                          className="w-10 h-14 rounded flex-shrink-0"
-                          style={{ background: 'var(--wood-mid)' }}
-                        />
+                        <div style={{ width: '40px', height: '56px', borderRadius: '3px', flexShrink: 0, background: 'var(--add-bg)', border: '1px solid var(--add-border)' }} />
                       )}
-                      <div className="flex flex-col justify-center min-w-0">
-                        <p className="text-sm font-medium truncate" style={{ color: 'var(--paper)' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
+                        <p style={{ fontSize: '14px', color: 'var(--ink)', margin: '0 0 3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {g.volumeInfo.title}
                         </p>
-                        <p className="text-xs truncate" style={{ color: 'var(--paper-dark)' }}>
+                        <p style={{ fontSize: '12px', color: 'var(--ink-mid)', margin: '0 0 2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {g.volumeInfo.authors?.join(', ') ?? '不明'}
                         </p>
-                        <p className="text-xs opacity-50" style={{ color: 'var(--paper-dark)' }}>
+                        <p style={{ fontSize: '11px', color: 'var(--ink-light)', margin: 0 }}>
                           {g.volumeInfo.publishedDate?.slice(0, 4)}
                         </p>
                       </div>
@@ -232,29 +222,18 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
 
               {/* 選択済みの本 */}
               {selected && (
-                <div
-                  className="flex gap-3 p-3 rounded"
-                  style={{ background: 'rgba(201,168,76,0.1)', border: '1px solid var(--gold)' }}
-                >
+                <div style={{ display: 'flex', gap: '12px', padding: '12px', borderRadius: '8px', background: 'var(--bg)', border: '1.5px solid var(--accent)' }}>
                   {selected.volumeInfo.imageLinks?.thumbnail && (
                     <img
                       src={selected.volumeInfo.imageLinks.thumbnail.replace('http://', 'https://')}
-                      className="w-14 h-20 object-cover rounded flex-shrink-0"
+                      style={{ width: '52px', height: '74px', objectFit: 'cover', borderRadius: '3px', flexShrink: 0 }}
                       alt=""
                     />
                   )}
-                  <div className="flex flex-col justify-center min-w-0">
-                    <p className="text-sm font-medium" style={{ color: 'var(--paper)' }}>
-                      {selected.volumeInfo.title}
-                    </p>
-                    <p className="text-xs" style={{ color: 'var(--paper-dark)' }}>
-                      {selected.volumeInfo.authors?.join(', ')}
-                    </p>
-                    <button
-                      className="text-xs mt-1 text-left opacity-50 hover:opacity-100"
-                      style={{ color: 'var(--paper-dark)' }}
-                      onClick={() => setSelected(null)}
-                    >
+                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
+                    <p style={{ fontSize: '14px', color: 'var(--ink)', margin: '0 0 4px' }}>{selected.volumeInfo.title}</p>
+                    <p style={{ fontSize: '12px', color: 'var(--ink-mid)', margin: '0 0 6px' }}>{selected.volumeInfo.authors?.join(', ')}</p>
+                    <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: 'var(--ink-light)', textAlign: 'left', padding: 0, fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
                       ← 選び直す
                     </button>
                   </div>
@@ -263,28 +242,21 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
             </>
           ) : (
             /* 手動入力フォーム */
-            <div className="flex flex-col gap-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { label: 'タイトル *', value: manualTitle, set: setManualTitle, placeholder: '本のタイトル' },
-                { label: '著者', value: manualAuthor, set: setManualAuthor, placeholder: '著者名' },
-                { label: 'シリーズ名', value: manualSeries, set: setManualSeries, placeholder: '（任意）' },
-                { label: 'シリーズ巻数', value: manualSeriesIndex, set: setManualSeriesIndex, placeholder: '例：1' },
+                { label: 'タイトル *', value: manualTitle, set: setManualTitle, placeholder: '本のタイトル', type: 'text' },
+                { label: '著者', value: manualAuthor, set: setManualAuthor, placeholder: '著者名', type: 'text' },
+                { label: 'シリーズ名', value: manualSeries, set: setManualSeries, placeholder: '（任意）', type: 'text' },
+                { label: 'シリーズ巻数', value: manualSeriesIndex, set: setManualSeriesIndex, placeholder: '例：1', type: 'number' },
               ].map(field => (
-                <div key={field.label} className="flex flex-col gap-1">
-                  <label className="text-xs" style={{ color: 'var(--paper-dark)' }}>{field.label}</label>
+                <div key={field.label} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <label style={{ fontSize: '12px', color: 'var(--ink-light)' }}>{field.label}</label>
                   <input
-                    type={field.label === 'シリーズ巻数' ? 'number' : 'text'}
+                    type={field.type}
                     placeholder={field.placeholder}
                     value={field.value}
                     onChange={e => field.set(e.target.value)}
-                    className="px-3 py-2 rounded text-sm"
-                    style={{
-                      background: 'rgba(245,234,216,0.1)',
-                      border: '1px solid rgba(201,168,76,0.4)',
-                      color: 'var(--paper)',
-                      fontFamily: 'Georgia, serif',
-                      outline: 'none',
-                    }}
+                    className="modal-input"
                   />
                 </div>
               ))}
@@ -293,10 +265,13 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
 
           {/* 追加ボタン */}
           <button
-            className="btn-primary py-2.5 rounded text-sm"
+            className="btn-primary"
+            style={{
+              padding: '12px', fontSize: '15px', borderRadius: '20px',
+              opacity: (manualMode ? !manualTitle.trim() : !selected) ? 0.4 : 1,
+            }}
             onClick={handleAdd}
             disabled={manualMode ? !manualTitle.trim() : !selected}
-            style={{ opacity: (manualMode ? !manualTitle.trim() : !selected) ? 0.4 : 1 }}
           >
             棚に追加する
           </button>

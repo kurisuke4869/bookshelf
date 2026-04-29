@@ -292,6 +292,7 @@ export default function App() {
           onClose={() => setAddModalStatus(null)}
         />
       )}
+      {/* 詳細画面（position:fixed でフルスクリーン） */}
       {detailBook && (
         <BookDetailModal
           book={detailBook}
