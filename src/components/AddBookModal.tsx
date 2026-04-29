@@ -65,6 +65,7 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
   const [manualAuthor, setManualAuthor] = useState('');
   const [manualSeries, setManualSeries] = useState('');
   const [manualSeriesIndex, setManualSeriesIndex] = useState('');
+  const [manualCoverUrl, setManualCoverUrl] = useState('');
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -87,6 +88,7 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
         author: manualAuthor.trim() || '不明',
         series: manualSeries.trim() || undefined,
         seriesIndex: manualSeriesIndex ? Number(manualSeriesIndex) : undefined,
+        coverUrl: manualCoverUrl.trim() || undefined,
         status,
         addedAt: new Date().toISOString().slice(0, 10),
         readAt: status === 'read' ? new Date().toISOString().slice(0, 10) : undefined,
@@ -262,6 +264,25 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
                   />
                 </div>
               ))}
+              {/* 表紙画像URL */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', color: 'var(--ink-light)' }}>表紙画像URL（任意）</label>
+                <input
+                  type="url"
+                  placeholder="https://..."
+                  value={manualCoverUrl}
+                  onChange={e => setManualCoverUrl(e.target.value)}
+                  className="modal-input"
+                />
+                {manualCoverUrl.trim() && (
+                  <img
+                    src={manualCoverUrl.trim()}
+                    alt="表紙プレビュー"
+                    style={{ width: '60px', height: '90px', objectFit: 'cover', borderRadius: '4px', marginTop: '4px', border: '1px solid var(--card-border)' }}
+                    onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                )}
+              </div>
             </div>
           )}
 
