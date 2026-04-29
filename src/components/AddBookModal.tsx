@@ -66,6 +66,10 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
   const [manualSeries, setManualSeries] = useState('');
   const [manualSeriesIndex, setManualSeriesIndex] = useState('');
   const [manualCoverUrl, setManualCoverUrl] = useState('');
+  const [manualPublisher, setManualPublisher] = useState('');
+  const [manualPublishedDate, setManualPublishedDate] = useState('');
+  const [manualPageCount, setManualPageCount] = useState('');
+  const [manualDescription, setManualDescription] = useState('');
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -89,6 +93,10 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
         series: manualSeries.trim() || undefined,
         seriesIndex: manualSeriesIndex ? Number(manualSeriesIndex) : undefined,
         coverUrl: manualCoverUrl.trim() || undefined,
+        publisher: manualPublisher.trim() || undefined,
+        publishedDate: manualPublishedDate.trim() || undefined,
+        pageCount: manualPageCount ? Number(manualPageCount) : undefined,
+        description: manualDescription.trim() || undefined,
         status,
         addedAt: new Date().toISOString().slice(0, 10),
         readAt: status === 'read' ? new Date().toISOString().slice(0, 10) : undefined,
@@ -282,6 +290,33 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
                     onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
                 )}
+              </div>
+              {/* 出版社 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', color: 'var(--ink-light)' }}>出版社</label>
+                <input type="text" placeholder="（任意）" value={manualPublisher} onChange={e => setManualPublisher(e.target.value)} className="modal-input" />
+              </div>
+              {/* 出版日 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', color: 'var(--ink-light)' }}>出版日</label>
+                <input type="text" placeholder="例：2023-04-01" value={manualPublishedDate} onChange={e => setManualPublishedDate(e.target.value)} className="modal-input" />
+              </div>
+              {/* ページ数 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', color: 'var(--ink-light)' }}>ページ数</label>
+                <input type="number" placeholder="（任意）" value={manualPageCount} onChange={e => setManualPageCount(e.target.value)} className="modal-input" />
+              </div>
+              {/* あらすじ */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label style={{ fontSize: '12px', color: 'var(--ink-light)' }}>あらすじ</label>
+                <textarea
+                  placeholder="（任意）"
+                  value={manualDescription}
+                  onChange={e => setManualDescription(e.target.value)}
+                  rows={3}
+                  className="modal-input"
+                  style={{ resize: 'none', lineHeight: 1.7 }}
+                />
               </div>
             </div>
           )}
