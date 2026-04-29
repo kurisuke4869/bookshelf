@@ -22,12 +22,12 @@ export function ShelfSection({ label, books, onBookClick, onAddClick, onMoreClic
       {/* 棚ラベル */}
       <div className="flex items-center justify-between px-4 mb-2">
         <div className="flex items-center gap-2">
-          <h2 className="shelf-label text-sm sm:text-base font-normal tracking-widest uppercase">
+          <h2 className="shelf-label text-base sm:text-lg font-normal tracking-widest uppercase">
             {label}
           </h2>
-          <span className="shelf-label text-xs opacity-60">({books.length})</span>
+          <span className="shelf-label text-sm opacity-60">({books.length})</span>
         </div>
-        <button className="btn-wood text-xs px-3 py-1 rounded" onClick={onAddClick}>
+        <button className="btn-wood text-sm px-3 py-1.5 rounded" onClick={onAddClick}>
           ＋ 追加
         </button>
       </div>

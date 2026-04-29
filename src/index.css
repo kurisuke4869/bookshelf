@@ -25,7 +25,8 @@
 
   body {
     margin: 0;
-    font-family: 'Georgia', 'Times New Roman', serif;
+    font-family: 'Kaisei Tokumin', 'Georgia', serif;
+    font-size: 16px;
     background-color: var(--bg);
     color: var(--ink);
     min-height: 100vh;
@@ -136,7 +137,7 @@
   }
 
   .shelf-label {
-    font-family: 'Georgia', serif;
+    font-family: 'Kaisei Tokumin', 'Georgia', serif;
     color: var(--ink);
     letter-spacing: 0.08em;
   }
@@ -146,7 +147,7 @@
     border: 1px solid var(--paper-mid);
     color: var(--ink-light);
     transition: all 0.2s ease;
-    font-family: 'Georgia', serif;
+    font-family: 'Kaisei Tokumin', 'Georgia', serif;
   }
 
   .nav-tab.active {
@@ -168,7 +169,7 @@
     box-shadow:
       0 2px 4px rgba(0,0,0,0.2),
       inset 0 1px 0 rgba(255,255,255,0.25);
-    font-family: 'Georgia', serif;
+    font-family: 'Kaisei Tokumin', 'Georgia', serif;
     transition: all 0.15s ease;
     cursor: pointer;
   }
@@ -191,7 +192,7 @@
     box-shadow:
       0 2px 4px rgba(0,0,0,0.2),
       inset 0 1px 0 rgba(255,255,255,0.2);
-    font-family: 'Georgia', serif;
+    font-family: 'Kaisei Tokumin', 'Georgia', serif;
     transition: all 0.15s ease;
     cursor: pointer;
   }

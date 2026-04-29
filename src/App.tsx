@@ -80,7 +80,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             {isDetailView ? (
               <button
-                className="shelf-label text-sm opacity-70 hover:opacity-100 flex items-center gap-1"
+                className="shelf-label text-base opacity-70 hover:opacity-100 flex items-center gap-1"
                 onClick={() => setView('home')}
                 style={{ background: 'none', border: 'none', cursor: 'pointer' }}
               >
@@ -101,7 +101,7 @@ export default function App() {
             )}
           </div>
           <button
-            className="btn-primary text-sm px-4 py-1.5 rounded"
+            className="btn-primary text-base px-4 py-2 rounded"
             onClick={() => setAddModalStatus(isDetailView ? (view as BookStatus) : 'read')}
           >
             ＋ 追加
@@ -114,7 +114,7 @@ export default function App() {
             {SORT_OPTIONS.map(opt => (
               <button
                 key={opt.key}
-                className={`nav-tab text-xs px-3 py-1 rounded whitespace-nowrap ${sortKey === opt.key ? 'active' : ''}`}
+                className={`nav-tab text-sm px-3 py-1.5 rounded whitespace-nowrap ${sortKey === opt.key ? 'active' : ''}`}
                 onClick={() => setSortKey(opt.key)}
               >
                 {opt.label}
@@ -173,7 +173,7 @@ export default function App() {
               {SORT_OPTIONS.map(opt => (
                 <button
                   key={opt.key}
-                  className={`nav-tab text-xs px-3 py-1 rounded whitespace-nowrap ${sortKey === opt.key ? 'active' : ''}`}
+                  className={`nav-tab text-sm px-3 py-1.5 rounded whitespace-nowrap ${sortKey === opt.key ? 'active' : ''}`}
                   onClick={() => setSortKey(opt.key)}
                 >
                   {opt.label}
