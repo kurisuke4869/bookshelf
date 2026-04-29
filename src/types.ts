@@ -12,9 +12,11 @@ export interface Book {
   publishedDate?: string;
   description?: string;
   pageCount?: number;
+  categories?: string[];
   status: BookStatus;
   rating?: number;
   memo?: string;
   readAt?: string;
   addedAt: string;
+  currentPage?: number;
 }
