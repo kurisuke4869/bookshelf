@@ -58,21 +58,10 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
         flexShrink: 0,
       }}>
         {/* ナビゲーションバー */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', padding: '12px 16px' }}>
           <button className="icon-btn" onClick={onClose}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--stat-label)" strokeWidth="2.5"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
           </button>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {editing ? (
-              <button className="icon-btn" onClick={handleSave} style={{ background: 'var(--accent)', borderColor: 'var(--accent)' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M20 6L9 17l-5-5" /></svg>
-              </button>
-            ) : (
-              <button className="icon-btn" onClick={() => setEditing(true)}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--stat-label)" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              </button>
-            )}
-          </div>
         </div>
 
         {/* 表紙＋タイトルエリア */}
