@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import type { Book, BookStatus } from '../types';
 
+interface GoogleBookVolumeInfo {
+  title: string;
+  authors?: string[];
+  publishedDate?: string;
+  publisher?: string;
+  description?: string;
+  pageCount?: number;
+  categories?: string[];
+  imageLinks?: { thumbnail?: string; smallThumbnail?: string };
+  industryIdentifiers?: { type: string; identifier: string }[];
+}
+
 interface GoogleBook {
   id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    publishedDate?: string;
-    publisher?: string;
-    description?: string;
-    pageCount?: number;
-    categories?: string[];
-    imageLinks?: { thumbnail?: string; smallThumbnail?: string };
-    industryIdentifiers?: { type: string; identifier: string }[];
-  };
+  volumeInfo: GoogleBookVolumeInfo;
 }
 
 async function searchGoogleBooks(query: string): Promise<GoogleBook[]> {
