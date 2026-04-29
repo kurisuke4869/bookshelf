@@ -8,6 +8,7 @@ import './index.css';
 
 type SortKey = 'addedAt' | 'readAt' | 'author' | 'series';
 type View = 'home' | BookStatus;
+type BottomTab = 'shelf' | 'stats';
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: 'readAt', label: '読んだ順' },
@@ -16,10 +17,13 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: 'addedAt', label: '追加順' },
 ];
 
-const VIEW_META: Record<BookStatus, { label: string }> = {
-  read:      { label: '読了' },
-  tsundoku:  { label: '積ん読' },
-  wishlist:  { label: 'ほしい本' },
+const HOME_TABS = ['すべて', '読了', '積ん読', 'ほしい'] as const;
+type HomeTab = typeof HOME_TABS[number];
+
+const SECTION_META: Record<BookStatus, { label: string; color: string; homeTab: HomeTab }> = {
+  read:     { label: '読了',   color: '#c87a30', homeTab: '読了' },
+  tsundoku: { label: '積ん読', color: '#8a6840', homeTab: '積ん読' },
+  wishlist: { label: 'ほしい', color: '#6a7a40', homeTab: 'ほしい' },
 };
 
 function sortBooks(books: Book[], key: SortKey): Book[] {
@@ -40,6 +44,8 @@ export default function App() {
   const [books, setBooks] = useState<Book[]>(() => loadBooks());
   const [sortKey, setSortKey] = useState<SortKey>('readAt');
   const [view, setView] = useState<View>('home');
+  const [homeTab, setHomeTab] = useState<HomeTab>('すべて');
+  const [bottomTab, setBottomTab] = useState<BottomTab>('shelf');
   const [addModalStatus, setAddModalStatus] = useState<BookStatus | null>(null);
   const [detailBook, setDetailBook] = useState<Book | null>(null);
 
@@ -63,58 +69,112 @@ export default function App() {
   };
 
   const isDetailView = view !== 'home';
-  const showSortBar = view === 'home' || view === 'read';
+  const currentMeta = isDetailView ? SECTION_META[view as BookStatus] : null;
+
+  const showSection = (status: BookStatus) => {
+    if (!isDetailView) {
+      const meta = SECTION_META[status];
+      return homeTab === 'すべて' || homeTab === meta.homeTab;
+    }
+    return view === status;
+  };
 
   return (
-    <div className="wood-bg min-h-screen">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg)' }}>
       {/* ヘッダー */}
-      <header
-        className="sticky top-0 z-50 px-4 py-3"
-        style={{
-          background: 'linear-gradient(180deg, var(--paper) 0%, var(--paper-dark) 100%)',
-          borderBottom: '2px solid var(--wood-mid)',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
-        }}
-      >
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <header className="app-header">
+        <div style={{ padding: '16px 16px 0' }}>
+          {/* タイトル行 */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
             {isDetailView ? (
               <button
-                className="shelf-label text-base opacity-70 hover:opacity-100 flex items-center gap-1"
                 onClick={() => setView('home')}
-                style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: 'var(--stat-label)', fontSize: '15px',
+                  fontFamily: "'Kaisei Tokumin', Georgia, serif",
+                  display: 'flex', alignItems: 'center', gap: '4px',
+                }}
               >
                 ‹ 戻る
               </button>
             ) : (
-              <>
-                <span style={{ fontSize: '1.4rem' }}>📚</span>
-                <h1 className="shelf-label text-lg font-normal m-0" style={{ letterSpacing: '0.15em' }}>
-                  My Bookshelf
-                </h1>
-              </>
+              <span style={{
+                color: '#f5e6cc', fontSize: '22px', fontWeight: 500,
+                fontFamily: "'Kaisei Tokumin', Georgia, serif",
+              }}>
+                本棚
+              </span>
             )}
             {isDetailView && (
-              <h1 className="shelf-label text-base font-normal m-0">
-                {VIEW_META[view as BookStatus].label}
-              </h1>
+              <span style={{
+                color: currentMeta!.color, fontSize: '18px',
+                fontFamily: "'Kaisei Tokumin', Georgia, serif",
+              }}>
+                {currentMeta!.label}
+              </span>
             )}
+            <button
+              onClick={() => setAddModalStatus(isDetailView ? (view as BookStatus) : 'read')}
+              style={{
+                width: '36px', height: '36px', borderRadius: '50%',
+                background: '#5a3518', border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8a070" strokeWidth="2">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </button>
           </div>
-          <button
-            className="btn-primary text-base px-4 py-2 rounded"
-            onClick={() => setAddModalStatus(isDetailView ? (view as BookStatus) : 'read')}
-          >
-            ＋ 追加
-          </button>
+
+          {/* 統計チップ（ホームのみ） */}
+          {!isDetailView && (
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '4px' }}>
+              {([
+                { label: '読了', count: readBooks.length },
+                { label: '積ん読', count: tsundokuBooks.length },
+                { label: 'ほしい', count: wishlistBooks.length },
+              ]).map(s => (
+                <div key={s.label} className="stat-chip">
+                  <span style={{ color: 'var(--stat-num)', fontSize: '20px', fontWeight: 500, display: 'block' }}>
+                    {s.count}
+                  </span>
+                  <span style={{ color: 'var(--stat-label)', fontSize: '11px', display: 'block', marginTop: '1px' }}>
+                    {s.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* ソートバー（読了画面のとき） */}
-        {showSortBar && view === 'read' && (
-          <div className="max-w-2xl mx-auto mt-2 flex gap-1 overflow-x-auto pb-1">
+        {/* タブバー（ホームのみ） */}
+        {!isDetailView && (
+          <div className="tab-bar">
+            {HOME_TABS.map(tab => (
+              <button
+                key={tab}
+                className={`tab-item ${homeTab === tab ? 'active' : ''}`}
+                onClick={() => setHomeTab(tab)}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* ソートバー（読了詳細ビューのみ） */}
+        {view === 'read' && (
+          <div style={{
+            display: 'flex', gap: '6px', padding: '8px 16px',
+            overflowX: 'auto', borderTop: '1px solid rgba(255,255,255,0.08)',
+          }}>
             {SORT_OPTIONS.map(opt => (
               <button
                 key={opt.key}
-                className={`nav-tab text-sm px-3 py-1.5 rounded whitespace-nowrap ${sortKey === opt.key ? 'active' : ''}`}
+                className={`nav-tab ${sortKey === opt.key ? 'active' : ''}`}
+                style={{ fontSize: '12px', padding: '4px 10px', borderRadius: '12px', whiteSpace: 'nowrap' }}
                 onClick={() => setSortKey(opt.key)}
               >
                 {opt.label}
@@ -125,86 +185,104 @@ export default function App() {
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-2xl mx-auto pt-6 pb-16 px-2">
-        {/* ホーム：各棚のプレビュー */}
-        {view === 'home' && (
+      <main style={{ flex: 1, padding: '16px', maxWidth: '640px', width: '100%', margin: '0 auto' }}>
+        {bottomTab === 'shelf' && (
           <>
-            {books.length === 0 && (
-              <div
-                className="text-center py-16"
-                style={{ color: 'rgba(245,234,216,0.3)', fontFamily: 'Georgia, serif' }}
-              >
-                <p style={{ fontSize: '2rem' }}>📚</p>
-                <p className="mt-2 text-sm">本棚が空です</p>
-                <p className="text-xs mt-1 opacity-70">「＋ 追加」から最初の一冊を登録しましょう</p>
-              </div>
+            {showSection('read') && (
+              <ShelfSection
+                label="読了" accentColor="#c87a30"
+                books={readBooks}
+                onBookClick={setDetailBook}
+                onAddClick={() => setAddModalStatus('read')}
+                onMoreClick={() => setView('read')}
+                preview={!isDetailView}
+              />
             )}
-            <ShelfSection
-              label="読了"              books={readBooks}
-              onBookClick={setDetailBook}
-              onAddClick={() => setAddModalStatus('read')}
-              onMoreClick={() => setView('read')}
-              emptyMessage="読んだ本を追加しましょう"
-              preview
-            />
-            <ShelfSection
-              label="積ん読"              books={tsundokuBooks}
-              onBookClick={setDetailBook}
-              onAddClick={() => setAddModalStatus('tsundoku')}
-              onMoreClick={() => setView('tsundoku')}
-              emptyMessage="積ん読の本を追加しましょう"
-              preview
-            />
-            <ShelfSection
-              label="ほしい本"              books={wishlistBooks}
-              onBookClick={setDetailBook}
-              onAddClick={() => setAddModalStatus('wishlist')}
-              onMoreClick={() => setView('wishlist')}
-              emptyMessage="気になる本を追加しましょう"
-              preview
-            />
+            {showSection('tsundoku') && (
+              <ShelfSection
+                label="積ん読" accentColor="#8a6840"
+                books={tsundokuBooks}
+                onBookClick={setDetailBook}
+                onAddClick={() => setAddModalStatus('tsundoku')}
+                onMoreClick={() => setView('tsundoku')}
+                preview={!isDetailView}
+                showBadge
+              />
+            )}
+            {showSection('wishlist') && (
+              <ShelfSection
+                label="ほしい" accentColor="#6a7a40"
+                books={wishlistBooks}
+                onBookClick={setDetailBook}
+                onAddClick={() => setAddModalStatus('wishlist')}
+                onMoreClick={() => setView('wishlist')}
+                preview={!isDetailView}
+                showBadge
+              />
+            )}
           </>
         )}
 
-        {/* 各棚の全件表示 */}
-        {view === 'read' && (
-          <>
-            <div className="max-w-2xl mx-auto mb-4 flex gap-1 overflow-x-auto">
-              {SORT_OPTIONS.map(opt => (
-                <button
-                  key={opt.key}
-                  className={`nav-tab text-sm px-3 py-1.5 rounded whitespace-nowrap ${sortKey === opt.key ? 'active' : ''}`}
-                  onClick={() => setSortKey(opt.key)}
-                >
-                  {opt.label}
-                </button>
+        {bottomTab === 'stats' && (
+          <div style={{ padding: '24px 0', textAlign: 'center' }}>
+            <p style={{ fontSize: '40px', marginBottom: '8px' }}>📊</p>
+            <p style={{ color: 'var(--ink-light)', fontSize: '14px' }}>統計機能は近日公開予定</p>
+            <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[
+                { label: '読了した本', value: `${readBooks.length}冊`, color: '#c87a30' },
+                { label: '積ん読', value: `${tsundokuBooks.length}冊`, color: '#8a6840' },
+                { label: 'ほしい本', value: `${wishlistBooks.length}冊`, color: '#6a7a40' },
+                { label: '合計登録数', value: `${books.length}冊`, color: 'var(--ink-mid)' },
+              ].map(s => (
+                <div key={s.label} style={{
+                  background: 'var(--card-bg)',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+                }}>
+                  <span style={{ color: 'var(--ink-mid)', fontSize: '15px' }}>{s.label}</span>
+                  <span style={{ color: s.color, fontSize: '22px', fontWeight: 500 }}>{s.value}</span>
+                </div>
               ))}
             </div>
-            <ShelfSection
-              label="読了"              books={readBooks}
-              onBookClick={setDetailBook}
-              onAddClick={() => setAddModalStatus('read')}
-              emptyMessage="読んだ本を追加しましょう"
-            />
-          </>
-        )}
-        {view === 'tsundoku' && (
-          <ShelfSection
-            label="積ん読"            books={tsundokuBooks}
-            onBookClick={setDetailBook}
-            onAddClick={() => setAddModalStatus('tsundoku')}
-            emptyMessage="積ん読の本を追加しましょう"
-          />
-        )}
-        {view === 'wishlist' && (
-          <ShelfSection
-            label="ほしい本"            books={wishlistBooks}
-            onBookClick={setDetailBook}
-            onAddClick={() => setAddModalStatus('wishlist')}
-            emptyMessage="気になる本を追加しましょう"
-          />
+          </div>
         )}
       </main>
+
+      {/* ボトムナビゲーション */}
+      <nav className="bottom-nav">
+        <button
+          className={`bottom-nav-item ${bottomTab === 'shelf' ? 'active' : ''}`}
+          onClick={() => { setBottomTab('shelf'); setView('home'); }}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+            stroke={bottomTab === 'shelf' ? 'var(--tab-active)' : 'var(--tab-inactive)'} strokeWidth="1.8">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+          <span className="bottom-nav-label">本棚</span>
+          {bottomTab === 'shelf' && (
+            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'var(--tab-active)' }} />
+          )}
+        </button>
+        <button
+          className={`bottom-nav-item ${bottomTab === 'stats' ? 'active' : ''}`}
+          onClick={() => setBottomTab('stats')}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+            stroke={bottomTab === 'stats' ? 'var(--tab-active)' : 'var(--tab-inactive)'} strokeWidth="1.8">
+            <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+          </svg>
+          <span className="bottom-nav-label">統計</span>
+          {bottomTab === 'stats' && (
+            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'var(--tab-active)' }} />
+          )}
+        </button>
+      </nav>
 
       {/* モーダル */}
       {addModalStatus && (

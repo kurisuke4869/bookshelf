@@ -2,203 +2,265 @@
 
 @layer base {
   :root {
-    --wood-dark: #7a4a28;
-    --wood-mid: #a0622a;
-    --wood-light: #c8843d;
-    --wood-highlight: #e8a860;
-    --shelf-shadow: rgba(0, 0, 0, 0.25);
-    --paper: #fdf6ec;
-    --paper-dark: #f0e0c0;
-    --paper-mid: #e8cfa0;
-    --ink: #3a2010;
-    --ink-light: #6b3a1f;
-    --accent: #9b2335;
-    --accent-light: #c0392b;
-    --gold: #b8860b;
-    --bg: #f5ead8;
-    --bg-dark: #eddfc8;
+    --bg: #f7f0e6;
+    --header-bg: #3b2510;
+    --card-bg: #fff8f0;
+    --chip-bg: #5a3518;
+    --chip-border: #7a4a28;
+    --accent-read: #c87a30;
+    --accent-tsundoku: #8a6840;
+    --accent-wishlist: #6a7a40;
+    --stat-num: #f5c87a;
+    --stat-label: #c8a070;
+    --section-title: #5a3518;
+    --count-bg: #e8d8c0;
+    --count-text: #a08060;
+    --badge-read-bg: #eaf4e8;
+    --badge-read-text: #3b6d11;
+    --badge-tsundoku-bg: #faeeda;
+    --badge-tsundoku-text: #633806;
+    --badge-wishlist-bg: #e8f0fa;
+    --badge-wishlist-text: #1a3a6b;
+    --ink: #3b2510;
+    --ink-mid: #6a4020;
+    --ink-light: #a08060;
+    --add-border: #c4a070;
+    --add-bg: #ede0cc;
+    --paper: #f5e6cc;
+    --tab-active: #f5c87a;
+    --tab-inactive: #9a7050;
   }
 
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    font-family: 'Kaisei Tokumin', 'Georgia', serif;
-    font-size: 16px;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
     background-color: var(--bg);
     color: var(--ink);
     min-height: 100vh;
-    overflow-x: hidden;
   }
 
-  #root {
-    min-height: 100vh;
-  }
+  #root { min-height: 100vh; display: flex; flex-direction: column; }
 }
 
 @layer components {
-  .wood-bg {
-    background-color: var(--bg);
-    background-image:
-      radial-gradient(ellipse at 0% 0%, rgba(200,132,61,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse at 100% 100%, rgba(122,74,40,0.06) 0%, transparent 60%);
-  }
-
-  .shelf {
-    background: linear-gradient(
-      180deg,
-      var(--wood-highlight) 0%,
-      var(--wood-light) 30%,
-      var(--wood-mid) 70%,
-      var(--wood-dark) 100%
-    );
-    box-shadow:
-      0 6px 12px var(--shelf-shadow),
-      0 2px 4px rgba(0,0,0,0.2),
-      inset 0 1px 0 rgba(255,255,255,0.3);
-    border-radius: 2px;
-    position: relative;
-  }
-
-  .shelf::before {
-    content: '';
-    position: absolute;
+  /* ヘッダー */
+  .app-header {
+    background: var(--header-bg);
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,0.35) 20%,
-      rgba(255,255,255,0.2) 50%,
-      rgba(255,255,255,0.35) 80%,
-      transparent
-    );
+    z-index: 50;
   }
 
-  .book-card {
+  .stat-chip {
+    background: var(--chip-bg);
+    border: 0.5px solid var(--chip-border);
+    border-radius: 20px;
+    padding: 8px 14px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .tab-bar {
+    display: flex;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 4px;
+  }
+
+  .tab-item {
+    flex: 1;
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--tab-inactive);
     cursor: pointer;
-    transition: transform 0.2s ease, filter 0.2s ease;
-    transform-origin: bottom center;
-    position: relative;
+    border-bottom: 2px solid transparent;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    transition: color 0.15s;
   }
 
-  .book-card:hover {
-    transform: translateY(-8px) scale(1.03);
-    filter: brightness(1.08);
-    z-index: 10;
+  .tab-item.active {
+    color: var(--tab-active);
+    border-bottom: 2px solid var(--tab-active);
   }
 
-  .book-card:active {
-    transform: translateY(-4px) scale(1.01);
+  /* セクション */
+  .section-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    border-radius: 16px;
+    padding: 5px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    color: #fff8ee;
+    transition: opacity 0.15s;
   }
 
-  .book-cover {
-    border-radius: 2px 4px 4px 2px;
-    box-shadow:
-      2px 2px 6px rgba(0,0,0,0.3),
-      inset -2px 0 6px rgba(0,0,0,0.15),
-      inset 1px 0 2px rgba(255,255,255,0.15);
+  .section-add-btn:hover { opacity: 0.85; }
+
+  /* 本カード */
+  .book-cover-wrap {
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 4px 8px 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 6px;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 2px 3px 8px rgba(0,0,0,0.25);
   }
 
-  .book-cover::after {
+  .book-cover-wrap:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 4px 8px 16px rgba(0,0,0,0.3);
+  }
+
+  .book-cover-wrap:active {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  .book-cover-wrap::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 8px;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      rgba(0,0,0,0.2),
-      rgba(0,0,0,0.06) 50%,
-      transparent
-    );
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: rgba(0,0,0,0.3);
+    z-index: 1;
   }
 
-  .parchment {
-    background-color: var(--paper);
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.5) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 80%, rgba(0,0,0,0.03) 0%, transparent 60%);
-    border: 1px solid var(--paper-mid);
+  .book-cover-wrap::after {
+    content: '';
+    position: absolute;
+    left: 6px; top: 0; bottom: 0;
+    width: 2px;
+    background: rgba(255,255,255,0.12);
+    z-index: 1;
   }
 
-  .gold-border {
-    border: 2px solid var(--gold);
-    box-shadow:
-      0 0 0 1px rgba(184,134,11,0.2),
-      inset 0 0 0 1px rgba(184,134,11,0.1);
+  /* 追加プレースホルダー */
+  .add-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 6px;
+    border: 1.5px dashed var(--add-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--add-bg);
+    cursor: pointer;
+    transition: opacity 0.15s;
   }
 
-  .shelf-label {
-    font-family: 'Kaisei Tokumin', 'Georgia', serif;
+  .add-placeholder:hover { opacity: 0.75; }
+
+  /* ボトムナビ */
+  .bottom-nav {
+    background: var(--header-bg);
+    display: flex;
+    padding: 10px 0 max(6px, env(safe-area-inset-bottom));
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .bottom-nav-label {
+    font-size: 10px;
+    color: var(--tab-inactive);
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+  }
+
+  .bottom-nav-item.active .bottom-nav-label { color: var(--tab-active); }
+
+  /* モーダル */
+  .modal-sheet {
+    background: var(--card-bg);
+    border-top: 2px solid var(--chip-border);
+    box-shadow: 0 -4px 32px rgba(0,0,0,0.2);
+  }
+
+  .modal-header {
+    border-bottom: 1px solid var(--count-bg);
+  }
+
+  .modal-input {
+    background: var(--bg);
+    border: 1px solid var(--count-bg);
     color: var(--ink);
-    letter-spacing: 0.08em;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    outline: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .modal-input:focus {
+    border-color: var(--accent-read);
   }
 
   .nav-tab {
-    background: var(--paper-dark);
-    border: 1px solid var(--paper-mid);
-    color: var(--ink-light);
-    transition: all 0.2s ease;
-    font-family: 'Kaisei Tokumin', 'Georgia', serif;
+    background: var(--count-bg);
+    border: 1px solid var(--add-border);
+    color: var(--ink-mid);
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    transition: all 0.15s;
+    cursor: pointer;
   }
 
   .nav-tab.active {
-    background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 100%);
-    color: var(--paper);
-    border-color: var(--wood-dark);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    background: var(--accent-read);
+    color: #fff8ee;
+    border-color: var(--accent-read);
   }
 
   .nav-tab:hover:not(.active) {
-    background: var(--paper-mid);
-    color: var(--ink);
+    background: var(--add-bg);
   }
 
   .btn-primary {
-    background: linear-gradient(180deg, var(--accent-light) 0%, var(--accent) 100%);
-    color: var(--paper);
-    border: 1px solid rgba(0,0,0,0.2);
-    box-shadow:
-      0 2px 4px rgba(0,0,0,0.2),
-      inset 0 1px 0 rgba(255,255,255,0.25);
-    font-family: 'Kaisei Tokumin', 'Georgia', serif;
-    transition: all 0.15s ease;
+    background: var(--accent-read);
+    color: #fff8ee;
+    border: none;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
     cursor: pointer;
+    transition: opacity 0.15s;
   }
 
-  .btn-primary:hover {
-    background: linear-gradient(180deg, #d44 0%, var(--accent-light) 100%);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-    transform: translateY(-1px);
-  }
-
-  .btn-primary:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  }
+  .btn-primary:hover { opacity: 0.88; }
 
   .btn-wood {
-    background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 100%);
+    background: var(--chip-bg);
     color: var(--paper);
-    border: 1px solid rgba(0,0,0,0.2);
-    box-shadow:
-      0 2px 4px rgba(0,0,0,0.2),
-      inset 0 1px 0 rgba(255,255,255,0.2);
-    font-family: 'Kaisei Tokumin', 'Georgia', serif;
-    transition: all 0.15s ease;
+    border: none;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
     cursor: pointer;
+    transition: opacity 0.15s;
   }
 
-  .btn-wood:hover {
-    background: linear-gradient(180deg, var(--wood-highlight) 0%, var(--wood-light) 100%);
-    transform: translateY(-1px);
-  }
+  .btn-wood:hover { opacity: 0.85; }
 }

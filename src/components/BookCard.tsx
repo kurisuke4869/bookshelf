@@ -1,14 +1,14 @@
 import type { Book } from '../types';
 
 const COVER_COLORS = [
-  ['#8b1a1a', '#c0392b'],
-  ['#1a4a8b', '#2980b9'],
-  ['#1a6b2a', '#27ae60'],
-  ['#6b1a6b', '#8e44ad'],
-  ['#6b4a1a', '#d35400'],
-  ['#1a5a6b', '#16a085'],
-  ['#3d1a6b', '#2c3e50'],
-  ['#6b1a3d', '#c0392b'],
+  ['#7b3f2a', '#5a2a18'],
+  ['#2e4a7a', '#1a2e58'],
+  ['#3a6b4a', '#234a30'],
+  ['#6a2a5a', '#481840'],
+  ['#7a5a2a', '#584018'],
+  ['#4a3a7a', '#2e2458'],
+  ['#3a6a6a', '#224848'],
+  ['#5a7a3a', '#3a5822'],
 ];
 
 function getCoverColor(title: string) {
@@ -19,80 +19,104 @@ function getCoverColor(title: string) {
   return COVER_COLORS[Math.abs(hash) % COVER_COLORS.length];
 }
 
+const STATUS_BADGE: Record<string, { bg: string; color: string; label: string }> = {
+  read:     { bg: 'var(--badge-read-bg)',     color: 'var(--badge-read-text)',     label: '読了' },
+  tsundoku: { bg: 'var(--badge-tsundoku-bg)', color: 'var(--badge-tsundoku-text)', label: '積ん読' },
+  wishlist: { bg: 'var(--badge-wishlist-bg)', color: 'var(--badge-wishlist-text)', label: 'ほしい' },
+};
+
 interface Props {
   book: Book;
   onClick: () => void;
+  showBadge?: boolean;
 }
 
-export function BookCard({ book, onClick }: Props) {
+export function BookCard({ book, onClick, showBadge = false }: Props) {
   const [dark, light] = getCoverColor(book.title);
+  const badge = STATUS_BADGE[book.status];
 
   return (
-    <div className="book-card flex flex-col items-center" onClick={onClick}>
+    <div
+      className="flex flex-col items-center gap-1 cursor-pointer"
+      style={{ minWidth: 0 }}
+      onClick={onClick}
+    >
+      {/* 表紙 */}
       <div
-        className="book-cover w-16 h-24 sm:w-20 sm:h-28 flex flex-col items-center justify-center p-1"
+        className="book-cover-wrap w-full"
         style={{
           background: book.coverUrl
             ? undefined
-            : `linear-gradient(160deg, ${light} 0%, ${dark} 100%)`,
+            : `linear-gradient(145deg, ${light}, ${dark})`,
         }}
       >
         {book.coverUrl ? (
           <img
             src={book.coverUrl}
             alt={book.title}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ borderRadius: '4px 8px 8px 4px' }}
           />
         ) : (
-          <>
-            <div
-              className="w-full border-t border-b mb-1"
-              style={{ borderColor: 'rgba(255,255,255,0.3)', height: '1px' }}
-            />
-            <p
-              className="text-center leading-tight"
-              style={{
-                fontSize: '0.5rem',
-                color: 'rgba(255,255,255,0.9)',
-                wordBreak: 'break-all',
-                fontFamily: 'Georgia, serif',
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
-              }}
-            >
+          <div className="flex flex-col items-center justify-center w-full h-full z-10 px-1">
+            <p style={{
+              fontSize: '0.5rem',
+              color: 'rgba(255,255,255,0.92)',
+              textAlign: 'center',
+              lineHeight: 1.4,
+              fontWeight: 500,
+              wordBreak: 'break-all',
+            }}>
               {book.title}
             </p>
-            <div
-              className="w-full border-t mt-1"
-              style={{ borderColor: 'rgba(255,255,255,0.3)', height: '1px' }}
-            />
-            <p
-              className="text-center mt-1"
-              style={{
-                fontSize: '0.4rem',
-                color: 'rgba(255,255,255,0.6)',
-                fontFamily: 'Georgia, serif',
-              }}
-            >
+            <p style={{
+              fontSize: '0.4rem',
+              color: 'rgba(255,255,255,0.6)',
+              marginTop: '4px',
+              textAlign: 'center',
+            }}>
               {book.author}
             </p>
-          </>
+          </div>
         )}
       </div>
-      {book.rating && (
-        <div className="mt-1 flex gap-0.5">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: '0.45rem',
-                color: i < book.rating! ? 'var(--gold)' : 'rgba(255,255,255,0.2)',
-              }}
-            >
-              ★
-            </span>
-          ))}
-        </div>
-      )}
+
+      {/* タイトル */}
+      <p style={{
+        fontSize: '10px',
+        color: 'var(--ink-mid)',
+        textAlign: 'center',
+        lineHeight: 1.3,
+        width: '100%',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}>
+        {book.title}
+      </p>
+
+      {/* バッジ */}
+      {showBadge ? (
+        <span style={{
+          fontSize: '9px',
+          background: badge.bg,
+          color: badge.color,
+          borderRadius: '6px',
+          padding: '1px 5px',
+        }}>
+          {badge.label}
+        </span>
+      ) : book.rating ? (
+        <span style={{
+          fontSize: '9px',
+          background: 'var(--badge-read-bg)',
+          color: 'var(--badge-read-text)',
+          borderRadius: '6px',
+          padding: '1px 5px',
+        }}>
+          {'★'} {book.rating.toFixed(1)}
+        </span>
+      ) : null}
     </div>
   );
 }
