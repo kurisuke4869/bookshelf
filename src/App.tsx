@@ -17,13 +17,10 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: 'addedAt', label: '追加順' },
 ];
 
-const HOME_TABS = ['すべて', '読了', '積ん読', 'ほしい'] as const;
-type HomeTab = typeof HOME_TABS[number];
-
-const SECTION_META: Record<BookStatus, { label: string; color: string; homeTab: HomeTab }> = {
-  read:     { label: '読了',   color: '#c87a30', homeTab: '読了' },
-  tsundoku: { label: '積ん読', color: '#8a6840', homeTab: '積ん読' },
-  wishlist: { label: 'ほしい', color: '#6a7a40', homeTab: 'ほしい' },
+const SECTION_META: Record<BookStatus, { label: string; color: string }> = {
+  read:     { label: '読了',   color: '#c87a30' },
+  tsundoku: { label: '積ん読', color: '#8a6840' },
+  wishlist: { label: 'ほしい', color: '#6a7a40' },
 };
 
 function sortBooks(books: Book[], key: SortKey): Book[] {
@@ -44,7 +41,6 @@ export default function App() {
   const [books, setBooks] = useState<Book[]>(() => loadBooks());
   const [sortKey, setSortKey] = useState<SortKey>('readAt');
   const [view, setView] = useState<View>('home');
-  const [homeTab, setHomeTab] = useState<HomeTab>('すべて');
   const [bottomTab, setBottomTab] = useState<BottomTab>('shelf');
   const [addModalStatus, setAddModalStatus] = useState<BookStatus | null>(null);
   const [detailBook, setDetailBook] = useState<Book | null>(null);
@@ -72,11 +68,7 @@ export default function App() {
   const currentMeta = isDetailView ? SECTION_META[view as BookStatus] : null;
 
   const showSection = (status: BookStatus) => {
-    if (!isDetailView) {
-      const meta = SECTION_META[status];
-      return homeTab === 'すべて' || homeTab === meta.homeTab;
-    }
-    return view === status;
+    return !isDetailView || view === status;
   };
 
   return (
@@ -148,21 +140,6 @@ export default function App() {
             </div>
           )}
         </div>
-
-        {/* タブバー（ホームのみ） */}
-        {!isDetailView && (
-          <div className="tab-bar">
-            {HOME_TABS.map(tab => (
-              <button
-                key={tab}
-                className={`tab-item ${homeTab === tab ? 'active' : ''}`}
-                onClick={() => setHomeTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* ソートバー（読了詳細ビューのみ） */}
         {view === 'read' && (
