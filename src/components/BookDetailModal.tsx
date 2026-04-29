@@ -8,10 +8,10 @@ interface Props {
   onClose: () => void;
 }
 
-const STATUS_OPTIONS: { key: BookStatus; label: string; icon: string }[] = [
-  { key: 'read', label: '読了', icon: '✅' },
-  { key: 'tsundoku', label: '積ん読', icon: '📦' },
-  { key: 'wishlist', label: 'ほしい', icon: '⭐' },
+const STATUS_OPTIONS: { key: BookStatus; label: string }[] = [
+  { key: 'read', label: '読了' },
+  { key: 'tsundoku', label: '積ん読' },
+  { key: 'wishlist', label: 'ほしい' },
 ];
 
 export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
@@ -107,7 +107,6 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
               className="nav-tab active flex items-center gap-2 px-4 py-2 rounded text-sm"
               onClick={() => setStatusOpen(v => !v)}
             >
-              <span>{currentStatus.icon}</span>
               <span>{currentStatus.label}</span>
               <span className="ml-auto opacity-60 text-xs">{statusOpen ? '▲' : '▼'}</span>
             </button>
@@ -126,7 +125,6 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
                       setStatusOpen(false);
                     }}
                   >
-                    <span>{opt.icon}</span>
                     <span>{opt.label}に移動</span>
                   </button>
                 ))}

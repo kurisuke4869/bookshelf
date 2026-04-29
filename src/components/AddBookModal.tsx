@@ -97,10 +97,10 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
     }
   };
 
-  const STATUS_OPTIONS: { key: BookStatus; label: string; icon: string }[] = [
-    { key: 'read', label: '読了', icon: '✅' },
-    { key: 'tsundoku', label: '積ん読', icon: '📦' },
-    { key: 'wishlist', label: 'ほしい', icon: '⭐' },
+  const STATUS_OPTIONS: { key: BookStatus; label: string }[] = [
+    { key: 'read', label: '読了' },
+    { key: 'tsundoku', label: '積ん読' },
+    { key: 'wishlist', label: 'ほしい' },
   ];
 
   return (
@@ -140,7 +140,6 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
                 className={`nav-tab flex items-center gap-1 text-xs px-3 py-1.5 rounded flex-1 justify-center ${status === opt.key ? 'active' : ''}`}
                 onClick={() => setStatus(opt.key)}
               >
-                <span>{opt.icon}</span>
                 <span>{opt.label}</span>
               </button>
             ))}
