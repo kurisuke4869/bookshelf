@@ -5,9 +5,10 @@
     --bg: #f7f0e6;
     --header-bg: #3b2510;
     --card-bg: #fff8f0;
-    --chip-bg: #5a3518;
-    --chip-border: #7a4a28;
-    --accent-read: #c87a30;
+    --card-border: #e0c8a8;
+    --icon-btn-bg: #5a3518;
+    --icon-btn-border: #7a4a28;
+    --accent: #c87a30;
     --accent-tsundoku: #8a6840;
     --accent-wishlist: #6a7a40;
     --stat-num: #f5c87a;
@@ -21,6 +22,10 @@
     --badge-tsundoku-text: #633806;
     --badge-wishlist-bg: #e8f0fa;
     --badge-wishlist-text: #1a3a6b;
+    --tag-genre-bg: #5a3518;
+    --tag-genre-text: #f5c87a;
+    --tag-status-bg: #c87a30;
+    --tag-status-text: #fff8ee;
     --ink: #3b2510;
     --ink-mid: #6a4020;
     --ink-light: #a08060;
@@ -29,6 +34,8 @@
     --paper: #f5e6cc;
     --tab-active: #f5c87a;
     --tab-inactive: #9a7050;
+    --progress-bg: #e8d8c0;
+    --star: #f5c87a;
   }
 
   * { box-sizing: border-box; }
@@ -45,27 +52,49 @@
 }
 
 @layer components {
-  /* ヘッダー */
+  /* ヘッダー共通：斜めストライプ */
   .app-header {
-    background: var(--header-bg);
+    background-color: var(--header-bg);
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(245,200,122,0.06) 10px,
+      rgba(245,200,122,0.06) 12px
+    );
     position: sticky;
     top: 0;
     z-index: 50;
   }
 
+  /* 丸アイコンボタン */
+  .icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--icon-btn-bg);
+    border: 1px solid var(--icon-btn-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* 統計チップ */
   .stat-chip {
-    background: var(--chip-bg);
-    border: 0.5px solid var(--chip-border);
+    background: var(--icon-btn-bg);
+    border: 0.5px solid var(--icon-btn-border);
     border-radius: 20px;
     padding: 8px 14px;
     flex: 1;
     text-align: center;
   }
 
+  /* タブバー */
   .tab-bar {
     display: flex;
     border-top: 1px solid rgba(255,255,255,0.08);
-    margin-top: 4px;
   }
 
   .tab-item {
@@ -75,11 +104,9 @@
     font-size: 13px;
     color: var(--tab-inactive);
     cursor: pointer;
+    border: none;
     border-bottom: 2px solid transparent;
     background: none;
-    border-top: none;
-    border-left: none;
-    border-right: none;
     font-family: 'Kaisei Tokumin', Georgia, serif;
     transition: color 0.15s;
   }
@@ -89,7 +116,7 @@
     border-bottom: 2px solid var(--tab-active);
   }
 
-  /* セクション */
+  /* pill型追加ボタン */
   .section-add-btn {
     display: flex;
     align-items: center;
@@ -106,16 +133,11 @@
 
   .section-add-btn:hover { opacity: 0.85; }
 
-  /* 本カード */
+  /* 本の表紙ラッパー */
   .book-cover-wrap {
     width: 100%;
     aspect-ratio: 2/3;
     border-radius: 4px 8px 8px 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 6px;
     position: relative;
     overflow: hidden;
     cursor: pointer;
@@ -124,12 +146,8 @@
   }
 
   .book-cover-wrap:hover {
-    transform: translateY(-5px) scale(1.03);
+    transform: translateY(-4px) scale(1.02);
     box-shadow: 4px 8px 16px rgba(0,0,0,0.3);
-  }
-
-  .book-cover-wrap:active {
-    transform: translateY(-2px) scale(1.01);
   }
 
   .book-cover-wrap::before {
@@ -138,7 +156,7 @@
     left: 0; top: 0; bottom: 0;
     width: 6px;
     background: rgba(0,0,0,0.3);
-    z-index: 1;
+    z-index: 2;
   }
 
   .book-cover-wrap::after {
@@ -147,7 +165,27 @@
     left: 6px; top: 0; bottom: 0;
     width: 2px;
     background: rgba(255,255,255,0.12);
-    z-index: 1;
+    z-index: 2;
+  }
+
+  /* 詳細画面の大きい表紙 */
+  .book-cover-large {
+    width: 130px;
+    height: 195px;
+    border-radius: 4px 10px 10px 4px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 6px 8px 20px rgba(0,0,0,0.4);
+    flex-shrink: 0;
+  }
+
+  .book-cover-large::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 8px;
+    background: rgba(0,0,0,0.35);
+    z-index: 2;
   }
 
   /* 追加プレースホルダー */
@@ -166,10 +204,113 @@
 
   .add-placeholder:hover { opacity: 0.75; }
 
+  /* 詳細カード */
+  .detail-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 0.5px solid var(--card-border);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .detail-card-label {
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* プログレスバー */
+  .progress-bar-bg {
+    background: var(--progress-bg);
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  /* モーダル入力 */
+  .modal-input {
+    background: var(--bg);
+    border: 1px solid var(--count-bg);
+    color: var(--ink);
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    outline: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .modal-input:focus { border-color: var(--accent); }
+
+  /* ナビタブ */
+  .nav-tab {
+    background: var(--count-bg);
+    border: 1px solid var(--add-border);
+    color: var(--ink-mid);
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .nav-tab.active {
+    background: var(--accent);
+    color: #fff8ee;
+    border-color: var(--accent);
+  }
+
+  .nav-tab:hover:not(.active) { background: var(--add-bg); }
+
+  /* ボタン */
+  .btn-primary {
+    background: var(--accent);
+    color: #fff8ee;
+    border: none;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border-radius: 20px;
+  }
+
+  .btn-primary:hover { opacity: 0.88; }
+
+  .btn-secondary {
+    background: var(--card-bg);
+    color: var(--accent-tsundoku);
+    border: 1px solid #d4b890;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border-radius: 20px;
+  }
+
+  .btn-secondary:hover { opacity: 0.85; }
+
+  .btn-wood {
+    background: var(--icon-btn-bg);
+    color: var(--paper);
+    border: none;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .btn-wood:hover { opacity: 0.85; }
+
   /* ボトムナビ */
   .bottom-nav {
     background: var(--header-bg);
     display: flex;
+    justify-content: center;
+    gap: 48px;
     padding: 10px 0 max(6px, env(safe-area-inset-bottom));
     position: sticky;
     bottom: 0;
@@ -177,7 +318,6 @@
   }
 
   .bottom-nav-item {
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -195,72 +335,4 @@
   }
 
   .bottom-nav-item.active .bottom-nav-label { color: var(--tab-active); }
-
-  /* モーダル */
-  .modal-sheet {
-    background: var(--card-bg);
-    border-top: 2px solid var(--chip-border);
-    box-shadow: 0 -4px 32px rgba(0,0,0,0.2);
-  }
-
-  .modal-header {
-    border-bottom: 1px solid var(--count-bg);
-  }
-
-  .modal-input {
-    background: var(--bg);
-    border: 1px solid var(--count-bg);
-    color: var(--ink);
-    font-family: 'Kaisei Tokumin', Georgia, serif;
-    outline: none;
-    border-radius: 6px;
-    padding: 8px 12px;
-    width: 100%;
-    font-size: 15px;
-  }
-
-  .modal-input:focus {
-    border-color: var(--accent-read);
-  }
-
-  .nav-tab {
-    background: var(--count-bg);
-    border: 1px solid var(--add-border);
-    color: var(--ink-mid);
-    font-family: 'Kaisei Tokumin', Georgia, serif;
-    transition: all 0.15s;
-    cursor: pointer;
-  }
-
-  .nav-tab.active {
-    background: var(--accent-read);
-    color: #fff8ee;
-    border-color: var(--accent-read);
-  }
-
-  .nav-tab:hover:not(.active) {
-    background: var(--add-bg);
-  }
-
-  .btn-primary {
-    background: var(--accent-read);
-    color: #fff8ee;
-    border: none;
-    font-family: 'Kaisei Tokumin', Georgia, serif;
-    cursor: pointer;
-    transition: opacity 0.15s;
-  }
-
-  .btn-primary:hover { opacity: 0.88; }
-
-  .btn-wood {
-    background: var(--chip-bg);
-    color: var(--paper);
-    border: none;
-    font-family: 'Kaisei Tokumin', Georgia, serif;
-    cursor: pointer;
-    transition: opacity 0.15s;
-  }
-
-  .btn-wood:hover { opacity: 0.85; }
 }
