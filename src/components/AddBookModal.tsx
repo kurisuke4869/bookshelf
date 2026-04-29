@@ -112,8 +112,8 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
       <div
         className="w-full sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl flex flex-col"
         style={{
-          background: 'linear-gradient(180deg, #4a2510 0%, #3d1f0a 100%)',
-          border: '2px solid var(--gold)',
+          background: 'linear-gradient(180deg, var(--paper) 0%, var(--paper-dark) 100%)',
+          border: '2px solid var(--wood-mid)',
           boxShadow: '0 -4px 32px rgba(0,0,0,0.6)',
         }}
       >

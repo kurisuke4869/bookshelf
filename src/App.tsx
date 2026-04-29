@@ -71,9 +71,9 @@ export default function App() {
       <header
         className="sticky top-0 z-50 px-4 py-3"
         style={{
-          background: 'linear-gradient(180deg, var(--wood-dark) 0%, rgba(61,31,10,0.97) 100%)',
-          borderBottom: '2px solid var(--gold)',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.6)',
+          background: 'linear-gradient(180deg, var(--paper) 0%, var(--paper-dark) 100%)',
+          borderBottom: '2px solid var(--wood-mid)',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.12)',
         }}
       >
         <div className="max-w-2xl mx-auto flex items-center justify-between">

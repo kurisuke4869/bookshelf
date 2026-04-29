@@ -2,18 +2,21 @@
 
 @layer base {
   :root {
-    --wood-dark: #3d1f0a;
-    --wood-mid: #6b3a1f;
-    --wood-light: #a0622a;
-    --wood-highlight: #c8843d;
-    --shelf-shadow: rgba(0, 0, 0, 0.5);
-    --paper: #f5ead8;
-    --paper-dark: #e8d4b0;
-    --ink: #2c1a0e;
-    --ink-light: #5c3d20;
-    --accent: #8b1a1a;
+    --wood-dark: #7a4a28;
+    --wood-mid: #a0622a;
+    --wood-light: #c8843d;
+    --wood-highlight: #e8a860;
+    --shelf-shadow: rgba(0, 0, 0, 0.25);
+    --paper: #fdf6ec;
+    --paper-dark: #f0e0c0;
+    --paper-mid: #e8cfa0;
+    --ink: #3a2010;
+    --ink-light: #6b3a1f;
+    --accent: #9b2335;
     --accent-light: #c0392b;
-    --gold: #c9a84c;
+    --gold: #b8860b;
+    --bg: #f5ead8;
+    --bg-dark: #eddfc8;
   }
 
   * {
@@ -23,7 +26,7 @@
   body {
     margin: 0;
     font-family: 'Georgia', 'Times New Roman', serif;
-    background-color: var(--wood-dark);
+    background-color: var(--bg);
     color: var(--ink);
     min-height: 100vh;
     overflow-x: hidden;
@@ -36,36 +39,24 @@
 
 @layer components {
   .wood-bg {
-    background-color: var(--wood-dark);
+    background-color: var(--bg);
     background-image:
-      repeating-linear-gradient(
-        92deg,
-        transparent,
-        transparent 2px,
-        rgba(255,255,255,0.015) 2px,
-        rgba(255,255,255,0.015) 4px
-      ),
-      repeating-linear-gradient(
-        180deg,
-        transparent,
-        transparent 8px,
-        rgba(0,0,0,0.08) 8px,
-        rgba(0,0,0,0.08) 9px
-      );
+      radial-gradient(ellipse at 0% 0%, rgba(200,132,61,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 100% 100%, rgba(122,74,40,0.06) 0%, transparent 60%);
   }
 
   .shelf {
     background: linear-gradient(
       180deg,
       var(--wood-highlight) 0%,
-      var(--wood-light) 20%,
-      var(--wood-mid) 60%,
+      var(--wood-light) 30%,
+      var(--wood-mid) 70%,
       var(--wood-dark) 100%
     );
     box-shadow:
       0 6px 12px var(--shelf-shadow),
-      0 2px 4px rgba(0,0,0,0.4),
-      inset 0 1px 0 rgba(255,255,255,0.15);
+      0 2px 4px rgba(0,0,0,0.2),
+      inset 0 1px 0 rgba(255,255,255,0.3);
     border-radius: 2px;
     position: relative;
   }
@@ -80,9 +71,9 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(255,255,255,0.2) 20%,
-      rgba(255,255,255,0.1) 50%,
-      rgba(255,255,255,0.2) 80%,
+      rgba(255,255,255,0.35) 20%,
+      rgba(255,255,255,0.2) 50%,
+      rgba(255,255,255,0.35) 80%,
       transparent
     );
   }
@@ -96,7 +87,7 @@
 
   .book-card:hover {
     transform: translateY(-8px) scale(1.03);
-    filter: brightness(1.1);
+    filter: brightness(1.08);
     z-index: 10;
   }
 
@@ -107,9 +98,9 @@
   .book-cover {
     border-radius: 2px 4px 4px 2px;
     box-shadow:
-      2px 2px 6px rgba(0,0,0,0.5),
-      inset -2px 0 6px rgba(0,0,0,0.2),
-      inset 1px 0 2px rgba(255,255,255,0.1);
+      2px 2px 6px rgba(0,0,0,0.3),
+      inset -2px 0 6px rgba(0,0,0,0.15),
+      inset 1px 0 2px rgba(255,255,255,0.15);
     position: relative;
     overflow: hidden;
   }
@@ -123,8 +114,8 @@
     height: 100%;
     background: linear-gradient(
       90deg,
-      rgba(0,0,0,0.3),
-      rgba(0,0,0,0.1) 50%,
+      rgba(0,0,0,0.2),
+      rgba(0,0,0,0.06) 50%,
       transparent
     );
   }
@@ -132,77 +123,74 @@
   .parchment {
     background-color: var(--paper);
     background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.3) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 80%, rgba(0,0,0,0.05) 0%, transparent 60%);
-    border: 1px solid var(--paper-dark);
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.5) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,0,0,0.03) 0%, transparent 60%);
+    border: 1px solid var(--paper-mid);
   }
 
   .gold-border {
     border: 2px solid var(--gold);
     box-shadow:
-      0 0 0 1px rgba(201,168,76,0.3),
-      inset 0 0 0 1px rgba(201,168,76,0.2);
+      0 0 0 1px rgba(184,134,11,0.2),
+      inset 0 0 0 1px rgba(184,134,11,0.1);
   }
 
   .shelf-label {
     font-family: 'Georgia', serif;
-    color: var(--paper);
-    text-shadow:
-      0 1px 2px rgba(0,0,0,0.8),
-      0 0 8px rgba(201,168,76,0.3);
-    letter-spacing: 0.1em;
+    color: var(--ink);
+    letter-spacing: 0.08em;
   }
 
   .nav-tab {
-    background: linear-gradient(180deg, var(--wood-mid) 0%, var(--wood-dark) 100%);
-    border: 1px solid rgba(201,168,76,0.4);
-    color: var(--paper-dark);
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-mid);
+    color: var(--ink-light);
     transition: all 0.2s ease;
     font-family: 'Georgia', serif;
   }
 
   .nav-tab.active {
-    background: linear-gradient(180deg, var(--wood-highlight) 0%, var(--wood-light) 100%);
+    background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 100%);
     color: var(--paper);
-    border-color: var(--gold);
-    box-shadow: 0 0 8px rgba(201,168,76,0.4);
+    border-color: var(--wood-dark);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   }
 
   .nav-tab:hover:not(.active) {
-    background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 100%);
-    color: var(--paper);
+    background: var(--paper-mid);
+    color: var(--ink);
   }
 
   .btn-primary {
     background: linear-gradient(180deg, var(--accent-light) 0%, var(--accent) 100%);
     color: var(--paper);
-    border: 1px solid rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,0,0,0.2);
     box-shadow:
-      0 2px 4px rgba(0,0,0,0.3),
-      inset 0 1px 0 rgba(255,255,255,0.2);
+      0 2px 4px rgba(0,0,0,0.2),
+      inset 0 1px 0 rgba(255,255,255,0.25);
     font-family: 'Georgia', serif;
     transition: all 0.15s ease;
     cursor: pointer;
   }
 
   .btn-primary:hover {
-    background: linear-gradient(180deg, #e04040 0%, var(--accent-light) 100%);
-    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    background: linear-gradient(180deg, #d44 0%, var(--accent-light) 100%);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
     transform: translateY(-1px);
   }
 
   .btn-primary:active {
     transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
   }
 
   .btn-wood {
     background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 100%);
     color: var(--paper);
-    border: 1px solid rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,0,0,0.2);
     box-shadow:
-      0 2px 4px rgba(0,0,0,0.3),
-      inset 0 1px 0 rgba(255,255,255,0.15);
+      0 2px 4px rgba(0,0,0,0.2),
+      inset 0 1px 0 rgba(255,255,255,0.2);
     font-family: 'Georgia', serif;
     transition: all 0.15s ease;
     cursor: pointer;
