@@ -19,10 +19,16 @@ interface GoogleBook {
 }
 
 async function searchGoogleBooks(query: string): Promise<GoogleBook[]> {
+  const apiKey = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
+  const keyParam = apiKey ? `&key=${apiKey}` : '';
   const res = await fetch(
-    `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=ja&maxResults=12&printType=books`
+    `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=ja&maxResults=12&printType=books${keyParam}`
   );
   const data = await res.json();
+  if (!res.ok) {
+    const message = data?.error?.message ?? `HTTPエラー ${res.status}`;
+    throw new Error(message);
+  }
   return (data.items ?? []) as GoogleBook[];
 }
 
@@ -58,6 +64,7 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GoogleBook[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<GoogleBook | null>(null);
   const [status, setStatus] = useState<BookStatus>(initialStatus);
   const [manualMode, setManualMode] = useState(false);
@@ -75,9 +82,12 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
     if (!query.trim()) return;
     setLoading(true);
     setResults([]);
+    setError(null);
     try {
       const items = await searchGoogleBooks(query);
       setResults(items);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : '検索に失敗しました');
     } finally {
       setLoading(false);
     }
@@ -194,6 +204,11 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
                   {loading ? '…' : '検索'}
                 </button>
               </div>
+
+              {/* エラー表示 */}
+              {error && (
+                <p style={{ fontSize: '13px', color: '#c0392b', margin: 0 }}>{error}</p>
+              )}
 
               {/* 検索結果 */}
               {results.length > 0 && !selected && (
