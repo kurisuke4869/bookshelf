@@ -34,17 +34,23 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
   const [readAt, setReadAt] = useState(book.readAt ?? '');
   const [editing, setEditing] = useState(false);
   const [editingMemo, setEditingMemo] = useState(false);
+  const [editingDesc, setEditingDesc] = useState(false);
+  const [description, setDescription] = useState(book.description ?? '');
+  const [editingPageCount, setEditingPageCount] = useState(false);
+  const [pageCount, setPageCount] = useState<number | undefined>(book.pageCount);
   const [descExpanded, setDescExpanded] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const [dark, light] = getCoverColor(book.title);
-  const progress = book.pageCount && currentPage ? Math.min(100, Math.round((currentPage / book.pageCount) * 100)) : 0;
+  const progress = pageCount && currentPage ? Math.min(100, Math.round((currentPage / pageCount) * 100)) : 0;
 
   const handleSave = () => {
-    onUpdate({ ...book, status, rating: rating > 0 ? rating : undefined, memo: memo.trim() || undefined, readAt: status === 'read' ? (readAt || book.readAt) : undefined, currentPage: currentPage > 0 ? currentPage : undefined });
+    onUpdate({ ...book, status, rating: rating > 0 ? rating : undefined, memo: memo.trim() || undefined, readAt: status === 'read' ? (readAt || book.readAt) : undefined, currentPage: currentPage > 0 ? currentPage : undefined, description: description.trim() || undefined, pageCount });
     setEditing(false);
     setEditingMemo(false);
+    setEditingDesc(false);
+    setEditingPageCount(false);
   };
 
   return (
@@ -122,20 +128,37 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
       <div style={{ padding: '8px 16px 100px', flex: 1 }}>
 
         {/* あらすじカード */}
-        {book.description && (
+        {(description || book.description) && (
           <div className="detail-card">
-            <p className="detail-card-label">あらすじ</p>
-            <div style={{ position: 'relative' }}>
-              <p style={{ fontSize: '13px', color: 'var(--ink-mid)', lineHeight: 1.8, margin: 0, overflow: descExpanded ? 'visible' : 'hidden', display: '-webkit-box', WebkitLineClamp: descExpanded ? 'unset' : 3, WebkitBoxOrient: 'vertical' } as React.CSSProperties}>
-                {book.description}
-              </p>
-              {!descExpanded && (
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40px', background: 'linear-gradient(transparent, var(--card-bg))' }} />
-              )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+              <p className="detail-card-label" style={{ margin: 0 }}>あらすじ</p>
+              <button onClick={() => setEditingDesc(v => !v)} style={{ fontSize: '12px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
+                {editingDesc ? '完了' : '編集'}
+              </button>
             </div>
-            <button onClick={() => setDescExpanded(v => !v)} style={{ marginTop: '8px', fontSize: '12px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
-              {descExpanded ? '閉じる ▴' : '続きを読む ▾'}
-            </button>
+            {editingDesc ? (
+              <textarea
+                value={description}
+                onChange={e => { setDescription(e.target.value); setEditing(true); }}
+                rows={6}
+                className="modal-input"
+                style={{ resize: 'none', lineHeight: 1.8, fontSize: '13px' }}
+              />
+            ) : (
+              <div style={{ position: 'relative' }}>
+                <p style={{ fontSize: '13px', color: 'var(--ink-mid)', lineHeight: 1.8, margin: 0, whiteSpace: 'pre-wrap', overflow: descExpanded ? 'visible' : 'hidden', display: '-webkit-box', WebkitLineClamp: descExpanded ? 'unset' : 3, WebkitBoxOrient: 'vertical' } as React.CSSProperties}>
+                  {description}
+                </p>
+                {!descExpanded && (
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40px', background: 'linear-gradient(transparent, var(--card-bg))' }} />
+                )}
+              </div>
+            )}
+            {!editingDesc && (
+              <button onClick={() => setDescExpanded(v => !v)} style={{ marginTop: '8px', fontSize: '12px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
+                {descExpanded ? '閉じる ▴' : '続きを読む ▾'}
+              </button>
+            )}
           </div>
         )}
 
@@ -159,7 +182,7 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
         </div>
 
         {/* 読書進捗カード */}
-        {book.pageCount && (
+        {pageCount && (
           <div className="detail-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <p className="detail-card-label" style={{ margin: 0 }}>読書進捗</p>
@@ -175,11 +198,11 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
                 onChange={e => { setCurrentPage(Number(e.target.value)); setEditing(true); }}
                 placeholder="現在ページ"
                 min={0}
-                max={book.pageCount}
+                max={pageCount}
                 className="modal-input"
                 style={{ width: '100px', fontSize: '13px', padding: '4px 8px' }}
               />
-              <span style={{ fontSize: '13px', color: 'var(--ink-light)' }}>/ {book.pageCount}ページ</span>
+              <span style={{ fontSize: '13px', color: 'var(--ink-light)' }}>/ {pageCount}ページ</span>
             </div>
           </div>
         )}
@@ -213,7 +236,7 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
         </div>
 
         {/* 書誌情報カード */}
-        {(book.publisher || book.isbn || book.pageCount || book.publishedDate) && (
+        {(book.publisher || book.isbn || pageCount || book.publishedDate) && (
           <div className="detail-card">
             <p className="detail-card-label">書誌情報</p>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -221,13 +244,30 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
                 { key: '出版社', val: book.publisher },
                 { key: '出版日', val: book.publishedDate },
                 { key: 'ISBN', val: book.isbn },
-                { key: 'ページ数', val: book.pageCount ? `${book.pageCount}ページ` : undefined },
               ].filter(r => r.val).map((row, i, arr) => (
-                <div key={row.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: i < arr.length - 1 ? '0.5px solid #ede0cc' : 'none' }}>
+                <div key={row.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: i < arr.length - 1 || pageCount !== undefined ? '0.5px solid #ede0cc' : 'none' }}>
                   <span style={{ fontSize: '13px', color: 'var(--ink-light)' }}>{row.key}</span>
                   <span style={{ fontSize: '13px', color: 'var(--ink)' }}>{row.val}</span>
                 </div>
               ))}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
+                <span style={{ fontSize: '13px', color: 'var(--ink-light)' }}>ページ数</span>
+                {editingPageCount ? (
+                  <input
+                    type="number"
+                    value={pageCount ?? ''}
+                    onChange={e => { setPageCount(e.target.value ? Number(e.target.value) : undefined); setEditing(true); }}
+                    onBlur={() => setEditingPageCount(false)}
+                    autoFocus
+                    className="modal-input"
+                    style={{ width: '80px', fontSize: '13px', padding: '2px 6px', textAlign: 'right' }}
+                  />
+                ) : (
+                  <button onClick={() => setEditingPageCount(true)} style={{ fontSize: '13px', color: 'var(--ink)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textDecoration: 'underline dotted' }}>
+                    {pageCount ? `${pageCount}ページ` : '未設定'}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -22,7 +22,7 @@ async function searchGoogleBooks(query: string): Promise<GoogleBook[]> {
   const apiKey = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
   const keyParam = apiKey ? `&key=${apiKey}` : '';
   const res = await fetch(
-    `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=ja&maxResults=12&printType=books${keyParam}`
+    `https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(query)}&langRestrict=ja&maxResults=12&printType=books${keyParam}`
   );
   const data = await res.json();
   if (!res.ok) {
