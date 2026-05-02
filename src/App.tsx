@@ -199,7 +199,7 @@ export default function App() {
                   <button
                     key={book.id}
                     onClick={() => { setDetailBook(book); setSearching(false); setSearchQuery(''); }}
-                    style={{ display: 'flex', gap: '12px', padding: '10px', borderRadius: '10px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', cursor: 'pointer', textAlign: 'left', width: '100%' }}
+                    style={{ display: 'flex', gap: '12px', padding: '10px', borderRadius: '10px', background: '#fff8f0', border: '1px solid var(--card-border)', cursor: 'pointer', textAlign: 'left', width: '100%' }}
                   >
                     {book.coverUrl ? (
                       <img src={book.coverUrl} style={{ width: '40px', height: '56px', objectFit: 'cover', borderRadius: '3px', flexShrink: 0 }} alt="" />
@@ -227,6 +227,7 @@ export default function App() {
                 onAddClick={() => setAddModalStatus('read')}
                 onMoreClick={() => setView('read')}
                 preview={!isDetailView}
+                groupByAuthor={sortKey === 'author'}
               />
             )}
             {showSection('tsundoku') && (

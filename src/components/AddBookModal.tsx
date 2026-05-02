@@ -218,7 +218,7 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
                       key={g.id}
                       style={{
                         display: 'flex', gap: '12px', padding: '10px', borderRadius: '8px', textAlign: 'left',
-                        background: 'var(--bg)', border: '1px solid var(--card-border)', cursor: 'pointer', width: '100%',
+                        background: '#fff8f0', border: '1px solid var(--card-border)', cursor: 'pointer', width: '100%',
                       }}
                       onClick={() => setSelected(g)}
                     >
@@ -249,7 +249,7 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
 
               {/* 選択済みの本 */}
               {selected && (
-                <div style={{ display: 'flex', gap: '12px', padding: '12px', borderRadius: '8px', background: 'var(--bg)', border: '1.5px solid var(--accent)' }}>
+                <div style={{ display: 'flex', gap: '12px', padding: '12px', borderRadius: '8px', background: '#fff8f0', border: '1.5px solid var(--accent)' }}>
                   {selected.volumeInfo.imageLinks?.thumbnail && (
                     <img
                       src={selected.volumeInfo.imageLinks.thumbnail.replace('http://', 'https://')}

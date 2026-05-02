@@ -44,7 +44,7 @@ export function BookCard({ book, onClick, showBadge = false }: Props) {
         )}
       </div>
 
-      <p style={{ fontSize: '10px', color: 'var(--ink-mid)', textAlign: 'center', lineHeight: 1.3, width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>
+      <p style={{ fontSize: '11px', color: '#f5e6cc', textAlign: 'center', lineHeight: 1.3, width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', margin: 0 }}>
         {book.title}
       </p>
 

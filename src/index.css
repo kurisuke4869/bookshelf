@@ -2,7 +2,9 @@
 
 @layer base {
   :root {
-    --bg: #f7f0e6;
+    --bg: #2a1808;
+    --shelf-board: linear-gradient(180deg, #8a5020 0%, #5a3010 50%, #3a1e08 100%);
+    --shelf-board-top: #a87040;
     --header-bg: #3b2510;
     --card-bg: #fff8f0;
     --card-border: #e0c8a8;
@@ -13,7 +15,7 @@
     --accent-wishlist: #6a7a40;
     --stat-num: #f5c87a;
     --stat-label: #c8a070;
-    --section-title: #5a3518;
+    --section-title: #f5e6cc;
     --count-bg: #e8d8c0;
     --count-text: #a08060;
     --badge-read-bg: #eaf4e8;
@@ -238,7 +240,7 @@
 
   /* モーダル入力 */
   .modal-input {
-    background: var(--bg);
+    background: #f7f0e6;
     border: 1px solid var(--count-bg);
     color: var(--ink);
     font-family: 'Kaisei Tokumin', Georgia, serif;
@@ -304,6 +306,99 @@
   }
 
   .btn-wood:hover { opacity: 0.85; }
+
+  /* 本棚グリッド */
+  .shelf-grid-wrap {
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent, transparent 99px,
+      rgba(0,0,0,0.07) 99px, rgba(0,0,0,0.07) 100px
+    );
+  }
+
+  .shelf-row {
+    padding: 12px 12px 0;
+  }
+
+  .shelf-board {
+    height: 14px;
+    background: var(--shelf-board);
+    border-top: 2px solid var(--shelf-board-top);
+    margin: 0 0px;
+  }
+
+  /* 著者仕切り板 */
+  .divider {
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 6px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(245, 200, 122, 0.18);
+    overflow: hidden;
+  }
+
+  .divider::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, rgba(245,200,122,0.5), rgba(200,122,48,0.3));
+  }
+
+  .divider::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 30%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent);
+  }
+
+  .divider-line {
+    position: absolute;
+    right: 30%;
+    width: 1px;
+    height: 60%;
+    background: linear-gradient(180deg, transparent, rgba(245,200,122,0.4), transparent);
+  }
+
+  .divider-author {
+    font-size: 14px;
+    font-weight: 500;
+    color: #f5c87a;
+    writing-mode: vertical-rl;
+    letter-spacing: 2px;
+    z-index: 1;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+  }
+
+  .divider-count {
+    background: rgba(245, 200, 122, 0.12);
+    border: 0.5px solid rgba(245, 200, 122, 0.3);
+    border-radius: 8px;
+    padding: 2px 5px;
+    font-size: 8px;
+    color: #c8a060;
+    z-index: 1;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+  }
+
+  .divider-label {
+    font-size: 9px;
+    color: #c8a060;
+    margin-top: 4px;
+    text-align: center;
+    font-family: 'Kaisei Tokumin', Georgia, serif;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   /* ボトムナビ */
   .bottom-nav {
