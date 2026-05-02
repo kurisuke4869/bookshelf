@@ -12,8 +12,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
-        name: 'My Bookshelf',
-        short_name: 'Bookshelf',
+        name: 'Biblia',
+        short_name: 'Biblia',
         description: '読んだ本・積読・ほしい本を管理する本棚アプリ',
         theme_color: '#3d1f0a',
         background_color: '#3d1f0a',

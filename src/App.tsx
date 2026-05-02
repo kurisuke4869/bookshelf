@@ -111,12 +111,7 @@ export default function App() {
                 style={{ flex: 1, fontSize: '14px', marginRight: '8px' }}
               />
             ) : (
-              <span style={{
-                color: '#f5e6cc', fontSize: '22px', fontWeight: 500,
-                fontFamily: "'Kaisei Tokumin', Georgia, serif",
-              }}>
-                本棚
-              </span>
+              <span />
             )}
             {isDetailView && (
               <span style={{
