@@ -231,7 +231,7 @@ export default function App() {
                 onAddClick={() => setAddModalStatus('read')}
                 onMoreClick={() => setView('read')}
                 preview={!isDetailView}
-                groupByAuthor={sortKey === 'author'}
+                groupByAuthor={isDetailView && sortKey === 'author'}
               />
             )}
             {showSection('tsundoku') && (
