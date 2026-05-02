@@ -27,7 +27,11 @@ const SECTION_META: Record<BookStatus, { label: string; color: string }> = {
 function sortBooks(books: Book[], key: SortKey): Book[] {
   return [...books].sort((a, b) => {
     if (key === 'readAt') return (b.readAt ?? '').localeCompare(a.readAt ?? '');
-    if (key === 'author') return a.author.localeCompare(b.author, 'ja');
+    if (key === 'author') {
+      const authorCmp = a.author.localeCompare(b.author, 'ja');
+      if (authorCmp !== 0) return authorCmp;
+      return (a.publishedDate ?? '').localeCompare(b.publishedDate ?? '');
+    }
     if (key === 'series') {
       const sa = a.series ?? a.title;
       const sb = b.series ?? b.title;
