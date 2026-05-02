@@ -43,10 +43,22 @@ export function ShelfSection({ label, accentColor, books, onBookClick, onAddClic
             {books.length}冊
           </span>
         </div>
-        <button className="section-add-btn" style={{ background: accentColor }} onClick={onAddClick}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14" /></svg>
-          追加
-        </button>
+        <div style={{ display: 'flex', gap: '6px' }}>
+          {preview && books.length > PREVIEW_COUNT && (
+            <button
+              className="section-add-btn"
+              style={{ background: 'var(--count-bg)', color: 'var(--ink-mid)', border: '1px solid var(--add-border)' }}
+              onClick={onMoreClick}
+            >
+              すべて見る
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6" /></svg>
+            </button>
+          )}
+          <button className="section-add-btn" style={{ background: accentColor }} onClick={onAddClick}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14" /></svg>
+            追加
+          </button>
+        </div>
       </div>
 
       {/* グリッド */}
