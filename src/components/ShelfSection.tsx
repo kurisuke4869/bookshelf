@@ -74,7 +74,7 @@ export function ShelfSection({ label, accentColor, books, onBookClick, onAddClic
                 <div className="shelf-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
                   {row.map((item) =>
                     item.type === 'divider' ? (
-                      <div key={`divider-${item.author}-${ri}-${ci}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <div key={`divider-${item.author}-${ri}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <div className="divider">
                           <div className="divider-line" />
                           <span className="divider-author">{item.author}</span>
