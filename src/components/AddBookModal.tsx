@@ -119,7 +119,7 @@ export function AddBookModal({ initialStatus, onAdd, onClose }: Props) {
 
   const STATUS_OPTIONS: { key: BookStatus; label: string }[] = [
     { key: 'read', label: '読了' },
-    { key: 'tsundoku', label: '積ん読' },
+    { key: 'tsundoku', label: '積読' },
     { key: 'wishlist', label: 'ほしい' },
   ];
 

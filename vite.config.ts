@@ -14,7 +14,7 @@ export default defineConfig({
       manifest: {
         name: 'My Bookshelf',
         short_name: 'Bookshelf',
-        description: '読んだ本・積ん読・ほしい本を管理する本棚アプリ',
+        description: '読んだ本・積読・ほしい本を管理する本棚アプリ',
         theme_color: '#3d1f0a',
         background_color: '#3d1f0a',
         display: 'standalone',

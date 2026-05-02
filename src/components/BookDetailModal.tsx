@@ -13,11 +13,11 @@ function getCoverColor(title: string) {
 
 const STATUS_OPTIONS: { key: BookStatus; label: string }[] = [
   { key: 'read', label: '読了' },
-  { key: 'tsundoku', label: '積ん読' },
+  { key: 'tsundoku', label: '積読' },
   { key: 'wishlist', label: 'ほしい' },
 ];
 
-const STATUS_LABEL: Record<BookStatus, string> = { read: '読了', tsundoku: '積ん読', wishlist: 'ほしい' };
+const STATUS_LABEL: Record<BookStatus, string> = { read: '読了', tsundoku: '積読', wishlist: 'ほしい' };
 
 interface Props {
   book: Book;

@@ -50,7 +50,7 @@ export function BookCard({ book, onClick, showBadge = false }: Props) {
 
       {showBadge ? (
         <span style={{ fontSize: '9px', background: book.status === 'tsundoku' ? 'var(--badge-tsundoku-bg)' : 'var(--badge-wishlist-bg)', color: book.status === 'tsundoku' ? 'var(--badge-tsundoku-text)' : 'var(--badge-wishlist-text)', borderRadius: '6px', padding: '1px 5px' }}>
-          {book.status === 'tsundoku' ? '積ん読' : 'ほしい'}
+          {book.status === 'tsundoku' ? '積読' : 'ほしい'}
         </span>
       ) : book.rating ? (
         <span style={{ fontSize: '9px', background: 'var(--badge-read-bg)', color: 'var(--badge-read-text)', borderRadius: '6px', padding: '1px 5px' }}>

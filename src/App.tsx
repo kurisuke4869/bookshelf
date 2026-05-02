@@ -3,6 +3,7 @@ import type { Book, BookStatus } from './types';
 import { ShelfSection } from './components/ShelfSection';
 import { AddBookModal } from './components/AddBookModal';
 import { BookDetailModal } from './components/BookDetailModal';
+import { StatsView } from './components/StatsView';
 import { loadBooks, addBook, updateBook, deleteBook } from './store';
 import './index.css';
 
@@ -19,7 +20,7 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
 
 const SECTION_META: Record<BookStatus, { label: string; color: string }> = {
   read:     { label: '読了',   color: '#c87a30' },
-  tsundoku: { label: '積ん読', color: '#8a6840' },
+  tsundoku: { label: '積読', color: '#8a6840' },
   wishlist: { label: 'ほしい', color: '#6a7a40' },
 };
 
@@ -44,6 +45,8 @@ export default function App() {
   const [bottomTab, setBottomTab] = useState<BottomTab>('shelf');
   const [addModalStatus, setAddModalStatus] = useState<BookStatus | null>(null);
   const [detailBook, setDetailBook] = useState<Book | null>(null);
+  const [searching, setSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const readBooks = sortBooks(books.filter(b => b.status === 'read'), sortKey);
   const tsundokuBooks = books.filter(b => b.status === 'tsundoku');
@@ -71,6 +74,13 @@ export default function App() {
     return !isDetailView || view === status;
   };
 
+  const searchResults = searchQuery.trim()
+    ? books.filter(b =>
+        b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.author.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg)' }}>
       {/* ヘッダー */}
@@ -90,6 +100,16 @@ export default function App() {
               >
                 ‹ 戻る
               </button>
+            ) : searching ? (
+              <input
+                autoFocus
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="タイトル・著者名で検索..."
+                className="modal-input"
+                style={{ flex: 1, fontSize: '14px', marginRight: '8px' }}
+              />
             ) : (
               <span style={{
                 color: '#f5e6cc', fontSize: '22px', fontWeight: 500,
@@ -106,18 +126,27 @@ export default function App() {
                 {currentMeta!.label}
               </span>
             )}
-            <button
-              onClick={() => setAddModalStatus(isDetailView ? (view as BookStatus) : 'read')}
-              style={{
-                width: '36px', height: '36px', borderRadius: '50%',
-                background: '#5a3518', border: 'none', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8a070" strokeWidth="2">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-            </button>
+            {!isDetailView && (
+              <button
+                onClick={() => { setSearching(v => !v); setSearchQuery(''); }}
+                style={{
+                  width: '36px', height: '36px', borderRadius: '50%',
+                  background: '#5a3518', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                {searching ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a070" strokeWidth="2.5">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c8a070" strokeWidth="2">
+                    <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
+                  </svg>
+                )}
+              </button>
+            )}
           </div>
 
           {/* 統計チップ（ホームのみ） */}
@@ -125,7 +154,7 @@ export default function App() {
             <div style={{ display: 'flex', gap: '10px', marginBottom: '4px' }}>
               {([
                 { label: '読了', count: readBooks.length },
-                { label: '積ん読', count: tsundokuBooks.length },
+                { label: '積読', count: tsundokuBooks.length },
                 { label: 'ほしい', count: wishlistBooks.length },
               ]).map(s => (
                 <div key={s.label} className="stat-chip">
@@ -163,7 +192,37 @@ export default function App() {
 
       {/* メインコンテンツ */}
       <main style={{ flex: 1, padding: '16px', maxWidth: '640px', width: '100%', margin: '0 auto' }}>
-        {bottomTab === 'shelf' && (
+        {searching && (
+          <div style={{ marginBottom: '16px' }}>
+            {searchQuery.trim() === '' ? (
+              <p style={{ color: 'var(--ink-light)', fontSize: '13px', textAlign: 'center', padding: '24px 0' }}>タイトルや著者名を入力してください</p>
+            ) : searchResults.length === 0 ? (
+              <p style={{ color: 'var(--ink-light)', fontSize: '13px', textAlign: 'center', padding: '24px 0' }}>見つかりませんでした</p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {searchResults.map(book => (
+                  <button
+                    key={book.id}
+                    onClick={() => { setDetailBook(book); setSearching(false); setSearchQuery(''); }}
+                    style={{ display: 'flex', gap: '12px', padding: '10px', borderRadius: '10px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', cursor: 'pointer', textAlign: 'left', width: '100%' }}
+                  >
+                    {book.coverUrl ? (
+                      <img src={book.coverUrl} style={{ width: '40px', height: '56px', objectFit: 'cover', borderRadius: '3px', flexShrink: 0 }} alt="" />
+                    ) : (
+                      <div style={{ width: '40px', height: '56px', borderRadius: '3px', flexShrink: 0, background: 'var(--add-bg)', border: '1px solid var(--add-border)' }} />
+                    )}
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
+                      <p style={{ fontSize: '14px', color: 'var(--ink)', margin: '0 0 3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{book.title}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--ink-mid)', margin: '0 0 4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{book.author}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--ink-light)', margin: 0 }}>{book.status === 'read' ? '読了' : book.status === 'tsundoku' ? '積読' : 'ほしい'}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {bottomTab === 'shelf' && !searching && (
           <>
             {showSection('read') && (
               <ShelfSection
@@ -177,7 +236,7 @@ export default function App() {
             )}
             {showSection('tsundoku') && (
               <ShelfSection
-                label="積ん読" accentColor="#8a6840"
+                label="積読" accentColor="#8a6840"
                 books={tsundokuBooks}
                 onBookClick={setDetailBook}
                 onAddClick={() => setAddModalStatus('tsundoku')}
@@ -201,31 +260,7 @@ export default function App() {
         )}
 
         {bottomTab === 'stats' && (
-          <div style={{ padding: '24px 0', textAlign: 'center' }}>
-            <p style={{ fontSize: '40px', marginBottom: '8px' }}>📊</p>
-            <p style={{ color: 'var(--ink-light)', fontSize: '14px' }}>統計機能は近日公開予定</p>
-            <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {[
-                { label: '読了した本', value: `${readBooks.length}冊`, color: '#c87a30' },
-                { label: '積ん読', value: `${tsundokuBooks.length}冊`, color: '#8a6840' },
-                { label: 'ほしい本', value: `${wishlistBooks.length}冊`, color: '#6a7a40' },
-                { label: '合計登録数', value: `${books.length}冊`, color: 'var(--ink-mid)' },
-              ].map(s => (
-                <div key={s.label} style={{
-                  background: 'var(--card-bg)',
-                  borderRadius: '12px',
-                  padding: '16px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-                }}>
-                  <span style={{ color: 'var(--ink-mid)', fontSize: '15px' }}>{s.label}</span>
-                  <span style={{ color: s.color, fontSize: '22px', fontWeight: 500 }}>{s.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <StatsView books={books} />
         )}
       </main>
 
