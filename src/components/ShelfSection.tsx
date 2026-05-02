@@ -113,7 +113,7 @@ export function ShelfSection({ label, accentColor, books, onBookClick, onAddClic
             return rows.map((row, ri) => (
               <div key={ri}>
                 <div className="shelf-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
-                  {row.map((item, ci) =>
+                  {row.map((item) =>
                     item === 'more' ? (
                       <div key="more" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', cursor: 'pointer' }} onClick={onMoreClick}>
                         <div className="add-placeholder">
