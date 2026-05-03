@@ -13,7 +13,7 @@ interface Props {
   groupByAuthor?: boolean;
 }
 
-const PREVIEW_COUNT = 7;
+const PREVIEW_COUNT = 8;
 
 function groupBooks(books: Book[]): { author: string; books: Book[] }[] {
   const map = new Map<string, Book[]>();
