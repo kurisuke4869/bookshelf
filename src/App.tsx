@@ -234,6 +234,7 @@ export default function App() {
             books={books}
             onBookClick={setDetailBook}
             onAddReading={() => setAddModalStatus('reading')}
+            onUpdateBook={handleUpdate}
           />
         )}
 
