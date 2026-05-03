@@ -83,7 +83,7 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
                 <img src={book.coverUrl} alt={book.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '12px', zIndex: 1 }}>
-                  <p style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.9)', textAlign: 'center', lineHeight: 1.4, margin: 0 }}>{book.title}</p>
+                  <p style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.9)', textAlign: 'center', lineHeight: 1.4, margin: 0 }}>{title}</p>
                   <p style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.6)', marginTop: '6px', margin: '6px 0 0' }}>{book.author}</p>
                 </div>
               )}
@@ -105,7 +105,7 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
           ) : (
             <h1
               onClick={() => setEditingTitle(true)}
-              style={{ color: '#f5e6cc', fontSize: '20px', fontFamily: "'Kaisei Tokumin', Georgia, serif", textAlign: 'center', margin: '0 0 6px', lineHeight: 1.4, cursor: 'pointer', borderBottom: '1px dotted rgba(245,230,204,0.3)' }}
+              style={{ color: 'var(--stat-label)', fontSize: '20px', fontFamily: "'Kaisei Tokumin', Georgia, serif", textAlign: 'center', margin: '0 0 6px', lineHeight: 1.4, cursor: 'pointer', borderBottom: '1px dotted rgba(160,112,64,0.4)' }}
             >
               {title}
             </h1>
