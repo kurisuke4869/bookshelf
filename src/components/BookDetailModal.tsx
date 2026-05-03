@@ -32,6 +32,10 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
   const [memo, setMemo] = useState(book.memo ?? '');
   const [currentPage, setCurrentPage] = useState<number>(book.currentPage ?? 0);
   const [readAt, setReadAt] = useState(book.readAt ?? '');
+  const [title, setTitle] = useState(book.title);
+  const [author, setAuthor] = useState(book.author);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [editingAuthor, setEditingAuthor] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editingMemo, setEditingMemo] = useState(false);
   const [editingDesc, setEditingDesc] = useState(false);
@@ -46,7 +50,7 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
   const progress = pageCount && currentPage ? Math.min(100, Math.round((currentPage / pageCount) * 100)) : 0;
 
   const handleSave = () => {
-    onUpdate({ ...book, status, rating: rating > 0 ? rating : undefined, memo: memo.trim() || undefined, readAt: status === 'read' ? (readAt || book.readAt) : undefined, currentPage: currentPage > 0 ? currentPage : undefined, description: description.trim() || undefined, pageCount });
+    onUpdate({ ...book, title: title.trim() || book.title, author: author.trim() || book.author, status, rating: rating > 0 ? rating : undefined, memo: memo.trim() || undefined, readAt: status === 'read' ? (readAt || book.readAt) : undefined, currentPage: currentPage > 0 ? currentPage : undefined, description: description.trim() || undefined, pageCount });
     setEditing(false);
     setEditingMemo(false);
     setEditingDesc(false);
@@ -89,10 +93,40 @@ export function BookDetailModal({ book, onUpdate, onDelete, onClose }: Props) {
           </div>
 
           {/* タイトル・著者 */}
-          <h1 style={{ color: '#f5e6cc', fontSize: '20px', fontFamily: "'Kaisei Tokumin', Georgia, serif", textAlign: 'center', margin: '0 0 6px', lineHeight: 1.4 }}>
-            {book.title}
-          </h1>
-          <p style={{ color: 'var(--stat-label)', fontSize: '13px', margin: '0 0 10px' }}>{book.author}</p>
+          {editingTitle ? (
+            <input
+              autoFocus
+              value={title}
+              onChange={e => { setTitle(e.target.value); setEditing(true); }}
+              onBlur={() => setEditingTitle(false)}
+              className="modal-input"
+              style={{ fontSize: '18px', textAlign: 'center', marginBottom: '6px', width: '100%' }}
+            />
+          ) : (
+            <h1
+              onClick={() => setEditingTitle(true)}
+              style={{ color: '#f5e6cc', fontSize: '20px', fontFamily: "'Kaisei Tokumin', Georgia, serif", textAlign: 'center', margin: '0 0 6px', lineHeight: 1.4, cursor: 'pointer', borderBottom: '1px dotted rgba(245,230,204,0.3)' }}
+            >
+              {title}
+            </h1>
+          )}
+          {editingAuthor ? (
+            <input
+              autoFocus
+              value={author}
+              onChange={e => { setAuthor(e.target.value); setEditing(true); }}
+              onBlur={() => setEditingAuthor(false)}
+              className="modal-input"
+              style={{ fontSize: '13px', textAlign: 'center', marginBottom: '10px', width: '100%' }}
+            />
+          ) : (
+            <p
+              onClick={() => setEditingAuthor(true)}
+              style={{ color: 'var(--stat-label)', fontSize: '13px', margin: '0 0 10px', cursor: 'pointer', borderBottom: '1px dotted rgba(200,160,112,0.4)' }}
+            >
+              {author}
+            </p>
+          )}
 
           {/* タグ */}
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '16px' }}>
