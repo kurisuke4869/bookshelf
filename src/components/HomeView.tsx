@@ -96,39 +96,68 @@ export function HomeView({ books, onBookClick, onAddReading, onUpdateBook }: Pro
 
         {currentBook ? (
           <div style={{
-            background: '#1e3a5f',
-            borderRadius: '16px', padding: '20px', marginBottom: '8px',
-            position: 'relative', overflow: 'hidden',
+            position: 'relative',
+            background: 'linear-gradient(135deg, #5a3820 0%, #3a2440 60%, #4a2c18 100%)',
+            borderRadius: '4px',
+            padding: '22px',
+            border: '1px solid rgba(245,200,122,0.55)',
+            boxShadow: 'inset 0 0 0 4px #4a2e18, inset 0 0 0 5.5px rgba(245,200,122,0.2), 0 8px 28px rgba(0,0,0,0.4)',
+            marginBottom: '8px',
           }}>
-            <div style={{ display: 'flex', gap: '16px' }}>
+            {/* 光沢 */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '35%', background: 'linear-gradient(180deg, rgba(255,255,255,0.04), transparent)', borderRadius: '4px 4px 0 0', pointerEvents: 'none', zIndex: 1 }} />
+
+            {/* 菱形コーナー */}
+            {[{ top: 6, left: 6 }, { top: 6, right: 6 }, { bottom: 6, left: 6 }, { bottom: 6, right: 6 }].map((pos, i) => (
+              <svg key={i} width="18" height="18" viewBox="0 0 18 18" style={{ position: 'absolute', zIndex: 1, ...pos }}>
+                <polygon points="9,0 18,9 9,18 0,9" fill="#f5c87a" opacity="0.75" />
+                <polygon points="9,4 14,9 9,14 4,9" fill="#4a2e18" />
+                <circle cx="9" cy="9" r="1.5" fill="#f5c87a" opacity="0.9" />
+              </svg>
+            ))}
+
+            {/* 上部矢印装飾 */}
+            <svg style={{ position: 'absolute', top: -1, left: '50%', transform: 'translateX(-50%)', width: 48, height: 12, zIndex: 1 }} viewBox="0 0 48 12">
+              <path d="M0,6 L18,6 L24,0 L30,6 L48,6" fill="none" stroke="#f5c87a" strokeWidth="1" opacity="0.7" />
+              <circle cx="24" cy="0" r="2" fill="#f5c87a" opacity="0.7" />
+            </svg>
+
+            {/* 下部矢印装飾 */}
+            <svg style={{ position: 'absolute', bottom: -1, left: '50%', transform: 'translateX(-50%)', width: 48, height: 12, zIndex: 1 }} viewBox="0 0 48 12">
+              <path d="M0,6 L18,6 L24,12 L30,6 L48,6" fill="none" stroke="#f5c87a" strokeWidth="1" opacity="0.7" />
+              <circle cx="24" cy="12" r="2" fill="#f5c87a" opacity="0.7" />
+            </svg>
+
+            {/* コンテンツ */}
+            <div style={{ display: 'flex', gap: '12px', padding: '4px 8px', position: 'relative', zIndex: 2 }}>
               <div onClick={() => onBookClick(currentBook)} style={{ cursor: 'pointer' }}>
-                <BookCoverSmall book={currentBook} width={100} height={150} borderRadius="4px 10px 10px 4px" />
+                <BookCoverSmall book={currentBook} width={78} height={116} borderRadius="4px 10px 10px 4px" />
               </div>
               <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-                <p style={{ fontSize: '17px', fontWeight: 500, color: '#f5e6cc', fontFamily: "'Kaisei Tokumin', Georgia, serif", lineHeight: 1.4, margin: '0 0 4px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' } as React.CSSProperties}>
+                <p style={{ fontSize: '14px', fontWeight: 500, color: '#fff8ee', fontFamily: "'Kaisei Tokumin', Georgia, serif", lineHeight: 1.4, margin: '0 0 4px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' } as React.CSSProperties}>
                   {currentBook.title}
                 </p>
-                <p style={{ fontSize: '13px', color: '#c8a070', margin: '0 0 12px' }}>{currentBook.author}</p>
+                <p style={{ fontSize: '11px', color: '#f0d0a0', margin: '0 0 8px' }}>{currentBook.author}</p>
 
                 {progress !== null ? (
                   <>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
-                      <span style={{ fontSize: '11px', color: '#9a7050' }}>進捗</span>
-                      <span style={{ fontSize: '18px', fontWeight: 500, color: '#f5c87a' }}>{progress}%</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '10px', color: '#d4a870' }}>進捗</span>
+                      <span style={{ fontSize: '15px', fontWeight: 500, color: '#f5c87a' }}>{progress}%</span>
                     </div>
-                    <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: '4px', height: '6px', overflow: 'hidden' }}>
-                      <div style={{ width: `${progress}%`, height: '6px', background: 'linear-gradient(90deg, #c87a30, #f5c87a)', borderRadius: '4px', transition: 'width 0.3s ease' }} />
+                    <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: '3px', height: '5px', overflow: 'hidden' }}>
+                      <div style={{ width: `${progress}%`, height: '5px', background: 'linear-gradient(90deg, #c87a30, #f5c87a)', borderRadius: '3px', transition: 'width 0.3s ease' }} />
                     </div>
-                    <p style={{ fontSize: '11px', color: '#7a5a40', margin: '5px 0 0' }}>
+                    <p style={{ fontSize: '10px', color: '#c8a070', margin: '3px 0 0' }}>
                       {currentBook.currentPage} / {currentBook.pageCount} ページ
                     </p>
                   </>
                 ) : (
-                  <p style={{ fontSize: '11px', color: '#7a5a40', margin: '0 0 8px' }}>ページ数未設定</p>
+                  <p style={{ fontSize: '10px', color: '#c8a070', margin: '0 0 8px' }}>ページ数未設定</p>
                 )}
 
                 {editingPage ? (
-                  <div style={{ display: 'flex', gap: '6px', marginTop: '12px', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '8px', alignItems: 'center' }}>
                     <input
                       autoFocus
                       type="number"
@@ -140,13 +169,13 @@ export function HomeView({ books, onBookClick, onAddReading, onUpdateBook }: Pro
                       min={0}
                       max={currentBook.pageCount}
                     />
-                    <span style={{ fontSize: '12px', color: '#7a5a40' }}>ページ</span>
-                    <button onClick={handlePageSave} style={{ background: 'rgba(245,200,122,0.2)', border: '0.5px solid rgba(245,200,122,0.4)', borderRadius: '10px', padding: '4px 10px', fontSize: '12px', color: '#f5c87a', cursor: 'pointer', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>保存</button>
+                    <span style={{ fontSize: '12px', color: '#c8a070' }}>ページ</span>
+                    <button onClick={handlePageSave} style={{ background: '#c87a30', border: 'none', borderRadius: '6px', padding: '4px 10px', fontSize: '11px', fontWeight: 500, color: '#fff8ee', cursor: 'pointer', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>保存</button>
                   </div>
                 ) : (
                   <button
                     onClick={() => { setPageInput(String(currentBook.currentPage ?? '')); setEditingPage(true); }}
-                    style={{ marginTop: '12px', background: 'rgba(245,200,122,0.15)', border: '0.5px solid rgba(245,200,122,0.3)', borderRadius: '12px', padding: '7px 14px', fontSize: '12px', color: '#f5c87a', width: '100%', cursor: 'pointer', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}
+                    style={{ marginTop: '8px', background: '#c87a30', border: 'none', borderRadius: '6px', padding: '7px', fontSize: '11px', fontWeight: 500, color: '#fff8ee', width: '100%', cursor: 'pointer', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}
                   >
                     進捗を更新する
                   </button>
@@ -156,7 +185,7 @@ export function HomeView({ books, onBookClick, onAddReading, onUpdateBook }: Pro
 
             {/* 複数冊読書中の場合 */}
             {readingBooks.length > 1 && (
-              <div style={{ marginTop: '12px', borderTop: '0.5px solid rgba(245,200,122,0.15)', paddingTop: '12px', display: 'flex', gap: '10px', overflowX: 'auto' }}>
+              <div style={{ marginTop: '12px', borderTop: '0.5px solid rgba(245,200,122,0.15)', paddingTop: '12px', display: 'flex', gap: '10px', overflowX: 'auto', position: 'relative', zIndex: 2 }}>
                 {readingBooks.slice(1).map(b => (
                   <div key={b.id} onClick={() => onBookClick(b)} style={{ cursor: 'pointer', flexShrink: 0 }}>
                     <BookCoverSmall book={b} width={52} height={78} borderRadius="3px 6px 6px 3px" />
