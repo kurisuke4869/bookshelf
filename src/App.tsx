@@ -248,7 +248,6 @@ export default function App() {
                 onAddClick={() => setAddModalStatus('reading')}
                 onMoreClick={() => setView('reading')}
                 preview={!isDetailView}
-                showBadge
               />
             )}
             {showSection('read') && (
@@ -270,7 +269,6 @@ export default function App() {
                 onAddClick={() => setAddModalStatus('tsundoku')}
                 onMoreClick={() => setView('tsundoku')}
                 preview={!isDetailView}
-                showBadge
               />
             )}
             {showSection('wishlist') && (
@@ -281,7 +279,6 @@ export default function App() {
                 onAddClick={() => setAddModalStatus('wishlist')}
                 onMoreClick={() => setView('wishlist')}
                 preview={!isDetailView}
-                showBadge
               />
             )}
           </>

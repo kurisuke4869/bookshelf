@@ -96,8 +96,7 @@ export function HomeView({ books, onBookClick, onAddReading, onUpdateBook }: Pro
 
         {currentBook ? (
           <div style={{
-            background: '#2a1808',
-            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.01) 20px, rgba(255,255,255,0.01) 21px)',
+            background: '#1e3a5f',
             borderRadius: '16px', padding: '20px', marginBottom: '8px',
             position: 'relative', overflow: 'hidden',
           }}>
@@ -167,7 +166,7 @@ export function HomeView({ books, onBookClick, onAddReading, onUpdateBook }: Pro
             )}
           </div>
         ) : (
-          <div style={{ background: '#2a1808', borderRadius: '16px', padding: '32px 16px', textAlign: 'center' }}>
+          <div style={{ background: 'var(--bg)', borderRadius: '16px', padding: '32px 16px', textAlign: 'center' }}>
             <p style={{ color: '#7a5a40', fontSize: '13px', margin: '0 0 12px', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>読書中の本がありません</p>
             <button onClick={onAddReading} className="btn-primary" style={{ padding: '8px 20px', fontSize: '13px' }}>
               本を追加する
@@ -180,21 +179,25 @@ export function HomeView({ books, onBookClick, onAddReading, onUpdateBook }: Pro
       {tsundokuBooks.length > 0 && (
         <section>
           <SectionTitle dot="#8a6840" label="次に読む候補" />
-          <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' } as React.CSSProperties}>
-            {tsundokuBooks.map(book => (
-              <div key={book.id} onClick={() => onBookClick(book)} style={{ cursor: 'pointer', flexShrink: 0, width: '90px' }}>
-                <BookCoverSmall book={book} width={90} height={134} borderRadius="3px 8px 8px 3px" />
-                <p style={{ fontSize: '10px', color: '#6a4020', marginTop: '5px', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
-                  {book.title}
-                </p>
-                <p style={{ fontSize: '9px', color: '#a08060', textAlign: 'center', margin: '1px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {book.author}
-                </p>
-                <span style={{ fontSize: '8px', background: '#faeeda', color: '#633806', borderRadius: '6px', padding: '1px 5px', marginTop: '3px', display: 'block', textAlign: 'center' }}>
-                  積読
-                </span>
-              </div>
-            ))}
+          <div style={{
+            background: '#5c3a1e',
+            backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(0,0,0,0.07) 99px, rgba(0,0,0,0.07) 100px)',
+            borderRadius: '10px',
+            overflow: 'hidden',
+            padding: '12px 12px 0',
+          }}>
+            <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '0', scrollbarWidth: 'none' } as React.CSSProperties}>
+              {tsundokuBooks.map(book => (
+                <div key={book.id} onClick={() => onBookClick(book)} style={{ cursor: 'pointer', flexShrink: 0, width: '72px' }}>
+                  <BookCoverSmall book={book} width={72} height={108} borderRadius="4px 8px 8px 4px" />
+                  <p style={{ fontSize: '9px', color: '#f5e6cc', marginTop: '5px', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontFamily: "'Kaisei Tokumin', Georgia, serif", lineHeight: 1.3 }}>
+                    {book.title}
+                  </p>
+                </div>
+              ))}
+            </div>
+            {/* 棚板 */}
+            <div style={{ height: '14px', background: 'var(--shelf-board)', borderTop: '2px solid var(--shelf-board-top)' }} />
           </div>
         </section>
       )}

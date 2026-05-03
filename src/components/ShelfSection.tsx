@@ -35,7 +35,7 @@ export function ShelfSection({ label, accentColor, books, onBookClick, onAddClic
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: accentColor, flexShrink: 0 }} />
-          <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--section-title)', letterSpacing: '0.5px', textTransform: 'uppercase', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
+          <span style={{ fontSize: '13px', fontWeight: 500, color: '#3b2510', letterSpacing: '0.5px', textTransform: 'uppercase', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
             {label}
           </span>
           <span style={{ fontSize: '12px', color: 'var(--count-text)', background: 'var(--count-bg)', borderRadius: '10px', padding: '2px 8px' }}>
@@ -66,7 +66,7 @@ export function ShelfSection({ label, accentColor, books, onBookClick, onAddClic
           まだ本がありません
         </div>
       ) : groupByAuthor && groups ? (
-        <div className="shelf-grid-wrap">
+        <div className="shelf-grid-wrap" style={{ background: '#5c3a1e', borderRadius: '10px', overflow: 'hidden' }}>
           {(() => {
             const COLS = 4;
             const allItems: ({ type: 'divider'; author: string; count: number } | { type: 'book'; book: Book })[] = [];
@@ -104,7 +104,7 @@ export function ShelfSection({ label, accentColor, books, onBookClick, onAddClic
           })()}
         </div>
       ) : (
-        <div className="shelf-grid-wrap">
+        <div className="shelf-grid-wrap" style={{ background: '#5c3a1e', borderRadius: '10px', overflow: 'hidden' }}>
           {(() => {
             const COLS = 4;
             const rows: Book[][] = [];
