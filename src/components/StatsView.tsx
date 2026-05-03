@@ -114,7 +114,7 @@ export function StatsView({ books }: Props) {
             onClick={() => setTab(t.key)}
             style={{
               background: 'none', border: 'none', cursor: 'pointer', padding: '0 0 4px',
-              fontSize: '13px', color: 'var(--ink-mid)',
+              fontSize: '13px', color: 'var(--section-title)',
               borderBottom: tab === t.key ? '1.5px solid var(--accent)' : '1.5px solid transparent',
               fontFamily: "'Kaisei Tokumin', Georgia, serif",
               opacity: tab === t.key ? 1 : 0.5,

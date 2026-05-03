@@ -27,7 +27,6 @@ function groupBooks(books: Book[]): { author: string; books: Book[] }[] {
 
 export function ShelfSection({ label, accentColor, books, onBookClick, onAddClick, onMoreClick, preview = false, showBadge = false, groupByAuthor = false }: Props) {
   const displayBooks = preview ? books.slice(0, PREVIEW_COUNT) : books;
-  const hasMore = preview && books.length > PREVIEW_COUNT;
   const groups = groupByAuthor ? groupBooks(displayBooks) : null;
 
   return (
@@ -103,60 +102,27 @@ export function ShelfSection({ label, accentColor, books, onBookClick, onAddClic
               </div>
             ));
           })()}
-          {preview && books.length > PREVIEW_COUNT && (
-            <button onClick={onMoreClick} style={{ display: 'block', width: '100%', marginTop: '8px', textAlign: 'center', fontSize: '12px', color: accentColor, background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
-              すべて見る ({books.length}冊) ›
-            </button>
-          )}
         </div>
       ) : (
         <div className="shelf-grid-wrap">
           {(() => {
             const COLS = 4;
-            const allItems: (Book | 'add' | 'more')[] = [...displayBooks];
-            if (hasMore) allItems.push('more');
-            else allItems.push('add');
-
-            const rows: typeof allItems[] = [];
-            for (let i = 0; i < allItems.length; i += COLS) {
-              rows.push(allItems.slice(i, i + COLS));
+            const rows: Book[][] = [];
+            for (let i = 0; i < displayBooks.length; i += COLS) {
+              rows.push(displayBooks.slice(i, i + COLS));
             }
 
             return rows.map((row, ri) => (
               <div key={ri}>
                 <div className="shelf-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
-                  {row.map((item) =>
-                    item === 'more' ? (
-                      <div key="more" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', cursor: 'pointer' }} onClick={onMoreClick}>
-                        <div className="add-placeholder">
-                          <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontSize: '18px', color: 'var(--add-border)' }}>+</div>
-                            <div style={{ fontSize: '9px', color: 'var(--ink-light)', marginTop: '2px' }}>{books.length - PREVIEW_COUNT}冊</div>
-                          </div>
-                        </div>
-                        <p style={{ fontSize: '10px', color: 'var(--ink-light)', margin: 0 }}>もっと見る</p>
-                      </div>
-                    ) : item === 'add' ? (
-                      <div key="add" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px', cursor: 'pointer' }} onClick={onAddClick}>
-                        <div className="add-placeholder">
-                          <span style={{ fontSize: '22px', color: 'var(--add-border)', lineHeight: 1 }}>+</span>
-                        </div>
-                        <p style={{ fontSize: '10px', color: 'var(--ink-light)', margin: 0 }}>追加する</p>
-                      </div>
-                    ) : (
-                      <BookCard key={(item as Book).id} book={item as Book} onClick={() => onBookClick(item as Book)} showBadge={showBadge} />
-                    )
-                  )}
+                  {row.map((book) => (
+                    <BookCard key={book.id} book={book} onClick={() => onBookClick(book)} showBadge={showBadge} />
+                  ))}
                 </div>
                 <div className="shelf-board" />
               </div>
             ));
           })()}
-          {preview && books.length > PREVIEW_COUNT && (
-            <button onClick={onMoreClick} style={{ display: 'block', width: '100%', marginTop: '8px', textAlign: 'center', fontSize: '12px', color: accentColor, background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Kaisei Tokumin', Georgia, serif" }}>
-              すべて見る ({books.length}冊) ›
-            </button>
-          )}
         </div>
       )}
     </div>
