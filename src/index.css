@@ -2,7 +2,7 @@
 
 @layer base {
   :root {
-    --bg: #2a1808;
+    --bg: #5c3a1e;
     --shelf-board: linear-gradient(180deg, #8a5020 0%, #5a3010 50%, #3a1e08 100%);
     --shelf-board-top: #a87040;
     --header-bg: #f5ece0;
