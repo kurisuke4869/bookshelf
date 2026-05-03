@@ -4,12 +4,13 @@ import { ShelfSection } from './components/ShelfSection';
 import { AddBookModal } from './components/AddBookModal';
 import { BookDetailModal } from './components/BookDetailModal';
 import { StatsView } from './components/StatsView';
+import { HomeView } from './components/HomeView';
 import { loadBooks, addBook, updateBook, deleteBook } from './store';
 import './index.css';
 
 type SortKey = 'addedAt' | 'readAt' | 'author' | 'series';
 type View = 'home' | BookStatus;
-type BottomTab = 'shelf' | 'stats';
+type BottomTab = 'home' | 'shelf' | 'stats';
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: 'readAt', label: '読んだ順' },
@@ -20,7 +21,8 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
 
 const SECTION_META: Record<BookStatus, { label: string; color: string }> = {
   read:     { label: '読了',   color: '#c87a30' },
-  tsundoku: { label: '積読', color: '#8a6840' },
+  reading:  { label: '読書中', color: '#4a8a6a' },
+  tsundoku: { label: '積読',   color: '#8a6840' },
   wishlist: { label: 'ほしい', color: '#6a7a40' },
 };
 
@@ -46,13 +48,14 @@ export default function App() {
   const [books, setBooks] = useState<Book[]>(() => loadBooks());
   const [sortKey, setSortKey] = useState<SortKey>('readAt');
   const [view, setView] = useState<View>('home');
-  const [bottomTab, setBottomTab] = useState<BottomTab>('shelf');
+  const [bottomTab, setBottomTab] = useState<BottomTab>('home');
   const [addModalStatus, setAddModalStatus] = useState<BookStatus | null>(null);
   const [detailBook, setDetailBook] = useState<Book | null>(null);
   const [searching, setSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const readBooks = sortBooks(books.filter(b => b.status === 'read'), sortKey);
+  const readingBooks = books.filter(b => b.status === 'reading');
   const tsundokuBooks = books.filter(b => b.status === 'tsundoku');
   const wishlistBooks = books.filter(b => b.status === 'wishlist');
 
@@ -84,6 +87,9 @@ export default function App() {
         b.author.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
+
+  const statusLabel = (s: BookStatus) =>
+    s === 'read' ? '読了' : s === 'reading' ? '読書中' : s === 'tsundoku' ? '積読' : 'ほしい';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg)' }}>
@@ -149,8 +155,8 @@ export default function App() {
             )}
           </div>
 
-          {/* 統計チップ（ホームのみ） */}
-          {!isDetailView && (
+          {/* 統計チップ（本棚ホームのみ） */}
+          {!isDetailView && bottomTab === 'shelf' && (
             <div style={{ display: 'flex', gap: '10px', marginBottom: '4px' }}>
               {([
                 { label: '読了', count: readBooks.length },
@@ -214,7 +220,7 @@ export default function App() {
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
                       <p style={{ fontSize: '14px', color: 'var(--ink)', margin: '0 0 3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{book.title}</p>
                       <p style={{ fontSize: '12px', color: 'var(--ink-mid)', margin: '0 0 4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{book.author}</p>
-                      <p style={{ fontSize: '11px', color: 'var(--ink-light)', margin: 0 }}>{book.status === 'read' ? '読了' : book.status === 'tsundoku' ? '積読' : 'ほしい'}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--ink-light)', margin: 0 }}>{statusLabel(book.status)}</p>
                     </div>
                   </button>
                 ))}
@@ -222,8 +228,28 @@ export default function App() {
             )}
           </div>
         )}
+
+        {bottomTab === 'home' && !searching && (
+          <HomeView
+            books={books}
+            onBookClick={setDetailBook}
+            onAddReading={() => setAddModalStatus('reading')}
+          />
+        )}
+
         {bottomTab === 'shelf' && !searching && (
           <>
+            {showSection('reading') && (
+              <ShelfSection
+                label="読書中" accentColor="#4a8a6a"
+                books={readingBooks}
+                onBookClick={setDetailBook}
+                onAddClick={() => setAddModalStatus('reading')}
+                onMoreClick={() => setView('reading')}
+                preview={!isDetailView}
+                showBadge
+              />
+            )}
             {showSection('read') && (
               <ShelfSection
                 label="読了" accentColor="#c87a30"
@@ -268,6 +294,20 @@ export default function App() {
       {/* ボトムナビゲーション */}
       <nav className="bottom-nav">
         <button
+          className={`bottom-nav-item ${bottomTab === 'home' ? 'active' : ''}`}
+          onClick={() => { setBottomTab('home'); setView('home'); }}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+            stroke={bottomTab === 'home' ? 'var(--tab-active)' : 'var(--tab-inactive)'} strokeWidth="1.8">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+          <span className="bottom-nav-label">ホーム</span>
+          {bottomTab === 'home' && (
+            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'var(--tab-active)' }} />
+          )}
+        </button>
+        <button
           className={`bottom-nav-item ${bottomTab === 'shelf' ? 'active' : ''}`}
           onClick={() => { setBottomTab('shelf'); setView('home'); }}
         >
@@ -305,7 +345,6 @@ export default function App() {
           onClose={() => setAddModalStatus(null)}
         />
       )}
-      {/* 詳細画面（position:fixed でフルスクリーン） */}
       {detailBook && (
         <BookDetailModal
           book={detailBook}
