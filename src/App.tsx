@@ -96,10 +96,11 @@ export default function App() {
               <button
                 onClick={() => setView('home')}
                 style={{
-                  background: 'none', border: 'none', cursor: 'pointer',
-                  color: 'var(--stat-label)', fontSize: '15px',
+                  background: '#e8d8c0', border: '1px solid #c8a070', cursor: 'pointer',
+                  color: '#8a5020', fontSize: '15px',
                   fontFamily: "'Kaisei Tokumin', Georgia, serif",
                   display: 'flex', alignItems: 'center', gap: '4px',
+                  borderRadius: '16px', padding: '4px 12px',
                 }}
               >
                 ‹ 戻る
@@ -119,7 +120,7 @@ export default function App() {
             )}
             {isDetailView && (
               <span style={{
-                color: currentMeta!.color, fontSize: '18px',
+                color: '#3b2510', fontSize: '18px',
                 fontFamily: "'Kaisei Tokumin', Georgia, serif",
               }}>
                 {currentMeta!.label}
@@ -130,17 +131,17 @@ export default function App() {
                 onClick={() => { setSearching(v => !v); setSearchQuery(''); }}
                 style={{
                   width: '36px', height: '36px', borderRadius: '50%',
-                  background: '#5a3518', border: 'none', cursor: 'pointer',
+                  background: '#e8d8c0', border: '1px solid #c8a070', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   flexShrink: 0,
                 }}
               >
                 {searching ? (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8a070" strokeWidth="2.5">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a5020" strokeWidth="2.5">
                     <path d="M18 6L6 18M6 6l12 12" />
                   </svg>
                 ) : (
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c8a070" strokeWidth="2">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8a5020" strokeWidth="2">
                     <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
                   </svg>
                 )}
@@ -173,7 +174,7 @@ export default function App() {
         {view === 'read' && (
           <div style={{
             display: 'flex', gap: '6px', padding: '8px 16px',
-            overflowX: 'auto', borderTop: '1px solid rgba(255,255,255,0.08)',
+            overflowX: 'auto', borderTop: '1px solid rgba(200,122,48,0.2)',
           }}>
             {SORT_OPTIONS.map(opt => (
               <button

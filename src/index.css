@@ -5,7 +5,8 @@
     --bg: #2a1808;
     --shelf-board: linear-gradient(180deg, #8a5020 0%, #5a3010 50%, #3a1e08 100%);
     --shelf-board-top: #a87040;
-    --header-bg: #3b2510;
+    --header-bg: #f5ece0;
+    --header-border: #c87a30;
     --card-bg: #fff8f0;
     --card-border: #e0c8a8;
     --icon-btn-bg: #5a3518;
@@ -13,8 +14,8 @@
     --accent: #c87a30;
     --accent-tsundoku: #8a6840;
     --accent-wishlist: #6a7a40;
-    --stat-num: #f5c87a;
-    --stat-label: #c8a070;
+    --stat-num: #8a5020;
+    --stat-label: #a07040;
     --section-title: #f5e6cc;
     --count-bg: #e8d8c0;
     --count-text: #a08060;
@@ -34,8 +35,8 @@
     --add-border: #c4a070;
     --add-bg: #ede0cc;
     --paper: #f5e6cc;
-    --tab-active: #f5c87a;
-    --tab-inactive: #9a7050;
+    --tab-active: #c87a30;
+    --tab-inactive: #b09070;
     --progress-bg: #e8d8c0;
     --star: #f5c87a;
   }
@@ -54,16 +55,10 @@
 }
 
 @layer components {
-  /* ヘッダー共通：斜めストライプ */
+  /* ヘッダー共通 */
   .app-header {
     background-color: var(--header-bg);
-    background-image: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 10px,
-      rgba(245,200,122,0.06) 10px,
-      rgba(245,200,122,0.06) 12px
-    );
+    border-bottom: 2px solid var(--header-border);
     position: sticky;
     top: 0;
     z-index: 50;
@@ -85,8 +80,8 @@
 
   /* 統計チップ */
   .stat-chip {
-    background: var(--icon-btn-bg);
-    border: 0.5px solid var(--icon-btn-border);
+    background: #e8d8c0;
+    border: 0.5px solid #c8a070;
     border-radius: 20px;
     padding: 8px 14px;
     flex: 1;
@@ -255,9 +250,9 @@
 
   /* ナビタブ */
   .nav-tab {
-    background: var(--count-bg);
-    border: 1px solid var(--add-border);
-    color: var(--ink-mid);
+    background: #e8d8c0;
+    border: 1px solid #c8a070;
+    color: #8a5020;
     font-family: 'Kaisei Tokumin', Georgia, serif;
     transition: all 0.15s;
     cursor: pointer;
@@ -403,6 +398,7 @@
   /* ボトムナビ */
   .bottom-nav {
     background: var(--header-bg);
+    border-top: 2px solid var(--header-border);
     display: flex;
     justify-content: center;
     gap: 48px;
