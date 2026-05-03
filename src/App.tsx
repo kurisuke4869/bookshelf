@@ -234,7 +234,7 @@ export default function App() {
             books={books}
             onBookClick={setDetailBook}
             onAddReading={() => setAddModalStatus('reading')}
-            onUpdateBook={handleUpdate}
+            onUpdateBook={updated => setBooks(prev => prev.map(b => b.id === updated.id ? updated : b))}
           />
         )}
 
