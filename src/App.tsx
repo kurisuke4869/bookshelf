@@ -240,16 +240,6 @@ export default function App() {
 
         {bottomTab === 'shelf' && !searching && (
           <>
-            {showSection('reading') && (
-              <ShelfSection
-                label="読書中" accentColor="#4a8a6a"
-                books={readingBooks}
-                onBookClick={setDetailBook}
-                onAddClick={() => setAddModalStatus('reading')}
-                onMoreClick={() => setView('reading')}
-                preview={!isDetailView}
-              />
-            )}
             {showSection('read') && (
               <ShelfSection
                 label="読了" accentColor="#c87a30"
